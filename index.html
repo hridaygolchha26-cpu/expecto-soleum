@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expecto Soleum — Precision Football Studs & Cleats Fitting</title>
+  
+  <!-- Modern Clean Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================================================
+       THE NIGHT QUIDDITCH PITCH PALETTE (HIGH READABILITY)
+       • Primary Background: Deep Obsidian (#0F1115)
+       • Card & Surface Background: Dark Charcoal (#1A1D24)
+       • Primary Text: Warm Ivory (#F4F1EA)
+       • Secondary Text: Muted Gray (#A0A6B1)
+       • Primary Accent / CTA: Antique Metallic Gold (#E5B80B / #D4AF37)
+       • Secondary Accent: Quidditch Turf (#1B4D3E)
+    ======================================================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #0F1115;
+      color: #F4F1EA;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(27, 77, 62, 0.22) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(229, 184, 11, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 0% 50%, rgba(26, 29, 36, 0.4) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    .font-mono-num { font-family: 'JetBrains Mono', monospace; }
+
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes pulseGold {
+      0%, 100% { box-shadow: 0 0 15px rgba(229, 184, 11, 0.35); }
+      50% { box-shadow: 0 0 30px rgba(229, 184, 11, 0.65); }
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fadeIn { animation: fadeIn 0.25s ease-out forwards; }
+    @keyframes slideRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    .animate-slideRight { animation: slideRight 0.25s ease-out forwards; }
+
+    .glow-gold { animation: pulseGold 2.5s infinite ease-in-out; }
+
+    /* Custom Modern Scrollbars */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0F1115; }
+    ::-webkit-scrollbar-thumb { background: #2A2F3A; border-radius: 4px; border: 1px solid #D4AF37; }
+    ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+  </style>
+
+  <!-- Global Error Handler -->
+  <script>
+    window.addEventListener('error', function(e) {
+      console.error("Global Error Caught:", e);
+      var box = document.getElementById('debug-error-banner');
+      if (!box) {
+        box = document.createElement('div');
+        box.id = 'debug-error-banner';
+        box.style.cssText = 'position:fixed;bottom:16px;left:16px;right:16px;background:#1A1D24;border:2px solid #E5B80B;color:#F4F1EA;padding:14px;border-radius:12px;z-index:999999;font-family:monospace;font-size:12px;box-shadow:0 10px 30px rgba(0,0,0,0.8);line-height:1.4;';
+        document.body.appendChild(box);
+      }
+      box.innerHTML = '<strong style="color:#E5B80B">⚠️ Notice:</strong> ' + (e.message || e.error) + '<br><span style="color:#A0A6B1;font-size:11px;">Source: ' + (e.filename || 'inline') + ' (Line ' + (e.lineno || '?') + ')</span>';
+    });
+  </script>
+
+  <!-- High-reliability CDNs -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.10/babel.min.js"></script>
+</head>
+<body class="selection:bg-amber-400 selection:text-black">
+  
+  <div id="root">
+    <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0F1115; color: #F4F1EA;">
+      <div style="width: 48px; height: 48px; border: 4px solid #1A1D24; border-top-color: #E5B80B; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+      <h2 style="margin-top: 18px; font-size: 20px; font-weight: 800; letter-spacing: 1px; color: #E5B80B;">
+        EXPECTO SOLEUM
+      </h2>
+      <p style="color: #A0A6B1; font-size: 13px; font-family: monospace; margin-top: 6px;">
+        Loading 3D Biometric Foot & Studs Engine...
+      </p>
+    </div>
+  </div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef, useMemo, Component } = React;
+
+    class ErrorBoundary extends Component {
+      constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+      }
+      static getDerivedStateFromError(error) {
+        return { hasError: true, error };
+      }
+      componentDidCatch(error, errorInfo) {
+        console.error("ErrorBoundary caught:", error, errorInfo);
+      }
+      render() {
+        if (this.state.hasError) {
+          return (
+            <div className="p-8 text-center text-[#F4F1EA] bg-[#1A1D24] m-8 rounded-2xl border-2 border-[#E5B80B] shadow-2xl">
+              <h2 className="text-2xl font-bold text-[#E5B80B]">Application Notice</h2>
+              <p className="text-xs font-mono text-[#A0A6B1] mt-2">{String(this.state.error?.message || this.state.error)}</p>
+              <button onClick={() => window.location.reload()} className="mt-4 px-6 py-2 bg-[#E5B80B] text-[#0F1115] font-bold rounded-xl text-xs">
+                Reload Application
+              </button>
+            </div>
+          );
+        }
+        return this.props.children;
+      }
+    }
+
+    // ========================================================
+    // 1. BUDGET FOOTBALL STUDS & CLEATS DATA (IN ₹ INR)
+    // Brands: Nivia, Sega, Vector X, Kipsta (Decathlon)
+    // Uses 100% REAL product photos for cleats and bottom studs!
+    // ========================================================
+    const FOOTBALL_STUDS = [
+      {
+        id: "nivia-ashtang-studs",
+        brand: "Nivia",
+        name: "Nivia Ashtang Football Studs",
+        edition: "India's Best-Selling Grassroots Cleats",
+        priceInr: 1249,
+        surface: "FG / Hard & Muddy Grounds",
+        studType: "14x Direct-Molded TPU Triangular & Conical Studs",
+        studHeightMm: "12mm Forefoot / 14mm Heel",
+        studConfiguration: "10 Forefoot Traction Studs + 4 Heel Braking Studs",
+        soleplateTech: "Direct-Injected TPU plate (Zero sole separation on hard grounds)",
+        idealFootWidth: "Wide / Standard",
+        widthToleranceCm: { min: 9.4, max: 10.8 },
+        widthProfile: "Comfort Wide-Friendly Fit",
+        colorTheme: "#C2410C", // Vibrant Orange/Gold
+        imageProfile: "images/ashtang_profile.jpg",
+        imageStuds: "images/ashtang_studs.jpg",
+        fallbackProfile: "https://www.niviasports.com/cdn/shop/files/077A7923_37afe90f-906f-4014-a893-44451f80d0e7.jpg?v=1783666422",
+        fallbackStuds: "https://www.niviasports.com/cdn/shop/files/077A9924_6588636d-6641-4740-875a-50bf3e3a1631.jpg?v=1783666444&width=1946",
+        svgCleatType: "ashtang",
+        weightGrams: 245,
+        upperMaterial: "Textured PVC synthetic leather with padded heel collar",
+        description: "The gold standard of Indian grassroots football. 14 triangular & conical TPU studs provide ruthless bite on hard or muddy pitches without stud pressure points. Spacious toe box accommodates broad Indian feet.",
+        fitNotes: "Generous toe box volume. Excellent for broad forefoots and players who suffer from side-wall pinching.",
+        proPlayers: ["Sunil Chhetri (Former Ambassador)", "Santosh Trophy Players"],
+        sizesAvailable: [6, 7, 8, 9, 10, 11],
+        studPenetration: 9.3
+      },
+      {
+        id: "nivia-oslar-blade-studs",
+        brand: "Nivia",
+        name: "Nivia Oslar Blade Speed Cleats",
+        edition: "Lightweight Blade Stud Edition",
+        priceInr: 1099,
+        surface: "FG (Firm Natural Grass)",
+        studType: "12x Direct-Molded Chevron Blade Studs",
+        studHeightMm: "11mm Forefoot / 13mm Heel",
+        studConfiguration: "8 Directional Chevron Blades + 4 Heel Blades",
+        soleplateTech: "Lightweight flexible TPU soleplate with forefoot acceleration flex grooves",
+        idealFootWidth: "Medium / Narrow",
+        widthToleranceCm: { min: 8.9, max: 10.0 },
+        widthProfile: "Streamlined Speed Cut",
+        colorTheme: "#2563EB", // Royal Blue
+        imageProfile: "images/oslar_profile.jpg",
+        imageStuds: "images/oslar_studs.jpg",
+        fallbackProfile: "https://www.niviasports.com/cdn/shop/files/FB-1656SL_Oslar_3.0_1.jpg?v=1719650678&width=1445",
+        fallbackStuds: "https://prokicksports.com/cdn/shop/files/main-04_7ebf2d9e-3aa9-4962-bd36-f57a220ffbb5.jpg?v=1784117756&width=1000",
+        svgCleatType: "oslar",
+        weightGrams: 215,
+        upperMaterial: "Embossed lightweight synthetic leather for clean ball contact",
+        description: "Built for pure takeoff acceleration. Chevron blade studs dig deep into natural grass for sudden bursts of speed, while the streamlined silhouette keeps weight to a minimum.",
+        fitNotes: "Snug, tapered race cut. Ideal for wingers and sprinters requiring a close wrap.",
+        proPlayers: ["State League Wingers", "College Football Champions"],
+        sizesAvailable: [6, 7, 8, 9, 10],
+        studPenetration: 9.1
+      },
+      {
+        id: "sega-star-classic-studs",
+        brand: "Sega",
+        name: "Sega Star Classic Football Studs",
+        edition: "Legendary 30-Year Grassroots Workhorse",
+        priceInr: 799,
+        surface: "Hard Ground / Mud / Gravel",
+        studType: "13x High-Durability Vulcanized Rubber Studs",
+        studHeightMm: "10mm Forefoot / 12mm Heel",
+        studConfiguration: "9 Forefoot Conical Studs + 4 Solid Heel Studs",
+        soleplateTech: "Full-rubber direct vulcanized outsole that never separates in monsoon rain",
+        idealFootWidth: "Extra Wide (2E)",
+        widthToleranceCm: { min: 9.8, max: 11.4 },
+        widthProfile: "Extra Wide 2E Anatomic Fit",
+        colorTheme: "#E5B80B", // Sega Gold / Black
+        imageProfile: "images/sega_profile.png",
+        imageStuds: "images/sega_studs.jpg",
+        fallbackProfile: "https://5.imimg.com/data5/GT/XN/MY-19377899/sega-star-impact-classic-football-studs-500x500.png",
+        fallbackStuds: "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?auto=format&fit=crop&w=800&q=80",
+        svgCleatType: "sega",
+        weightGrams: 260,
+        upperMaterial: "Supple synthetic leather with dual-row reinforced stitching",
+        description: "The most durable football boot in India. Vulcanized rubber studs endure stones, hard clay, and soaked monsoon grass without breaking. Extra-wide last prevents toe cramping.",
+        fitNotes: "Extremely wide and forgiving. Best option for very wide feet, flat arches, or thick match socks.",
+        proPlayers: ["Grassroots Legends", "District League Veterans"],
+        sizesAvailable: [5, 6, 7, 8, 9, 10, 11],
+        studPenetration: 8.8
+      },
+      {
+        id: "nivia-dominator-3-studs",
+        brand: "Nivia",
+        name: "Nivia Dominator 3.0 Pro Cleats",
+        edition: "Power Striker & Ankle Support",
+        priceInr: 1499,
+        surface: "FG / SG Hybrid",
+        studType: "13x Dual-Density TPU Conical & Blade Hybrid Studs",
+        studHeightMm: "13mm Forefoot / 15mm Heel",
+        studConfiguration: "Triangular Stance Alignment + Reinforced Heel Pillars",
+        soleplateTech: "High-grade torsion chassis with midfoot arch bridge for clean power transmission",
+        idealFootWidth: "Medium to Wide",
+        widthToleranceCm: { min: 9.3, max: 10.6 },
+        widthProfile: "Balanced Anatomical Fit",
+        colorTheme: "#DC2626", // Deep Red
+        imageProfile: "images/dominator_profile.jpg",
+        imageStuds: "images/dominator_studs.jpg",
+        fallbackProfile: "https://prokicksports.com/cdn/shop/files/1_1f3ef73b-c2f5-4ef3-bd62-1a15fca33b76.jpg?v=1760682396&width=1000",
+        fallbackStuds: "https://images.unsplash.com/photo-1511886929837-354d827aae26?auto=format&fit=crop&w=800&q=80",
+        svgCleatType: "dominator",
+        weightGrams: 238,
+        upperMaterial: "3D micro-textured synthetic upper with snug heel counter",
+        description: "Combines aggressive stud bite with midfoot rigidity. The reinforced arch bridge stops midfoot flexing on powerful long balls and shots, while hybrid studs penetrate soaked turf.",
+        fitNotes: "Secure midfoot lockdown with comfortable forefoot spread.",
+        proPlayers: ["I-League Academy Prospects", "University League Captains"],
+        sizesAvailable: [6, 7, 8, 9, 10, 11],
+        studPenetration: 9.5
+      },
+      {
+        id: "vector-x-dynamic-cleats",
+        brand: "Vector X",
+        name: "Vector X Dynamic Football Cleats",
+        edition: "All-Round Match & Training Cleats",
+        priceInr: 999,
+        surface: "FG (Firm Ground)",
+        studType: "14x Molded PU Conical Studs",
+        studHeightMm: "11mm Forefoot / 13mm Heel",
+        studConfiguration: "Circular Forefoot Pivot Ring + Balanced Heel Grip",
+        soleplateTech: "Direct molded TPU plate with heel impact shock absorber",
+        idealFootWidth: "Standard Fit",
+        widthToleranceCm: { min: 9.2, max: 10.3 },
+        widthProfile: "Standard Regular Fit",
+        colorTheme: "#10B981", // Emerald Green
+        imageProfile: "images/vector_profile.jpg",
+        imageStuds: "images/vector_studs.jpg",
+        fallbackProfile: "https://www.vector-x.com/cdn/shop/files/L4A5944.jpg?v=1772177139",
+        fallbackStuds: "https://www.vector-x.com/cdn/shop/files/2_dceaa285-5052-4196-b933-493f854b64cb.jpg?v=1741684239",
+        svgCleatType: "vector",
+        weightGrams: 230,
+        upperMaterial: "Textured PVC with reinforced anti-abrasion toe guard",
+        description: "Accessible all-rounder for daily practice. Round conical studs allow effortless 360-degree rotation without catching on the grass, reducing knee and ankle strain.",
+        fitNotes: "True to standard size. Comfortable balanced volume.",
+        proPlayers: ["Youth Club Athletes", "Inter-School Strikers"],
+        sizesAvailable: [6, 7, 8, 9, 10],
+        studPenetration: 9.0
+      },
+      {
+        id: "kipsta-agility-100-studs",
+        brand: "Kipsta (Decathlon)",
+        name: "Kipsta Agility 100 FG Football Studs",
+        edition: "Pressure-Relief Ground Studs",
+        priceInr: 1299,
+        surface: "FG / Natural Grass & Turf",
+        studType: "12x Round Molded TPU Studs with Pressure-Relief Bases",
+        studHeightMm: "11mm Forefoot / 13mm Heel",
+        studConfiguration: "Symmetric Pressure-Dispersal Conical Stud Grid",
+        soleplateTech: "Supple TPU plate engineered to disperse ground pressure across the entire foot",
+        idealFootWidth: "Wide / Standard",
+        widthToleranceCm: { min: 9.5, max: 10.9 },
+        widthProfile: "Plush Wide-Accommodating",
+        colorTheme: "#F4F1EA", // White / Slate
+        imageProfile: "images/kipsta_profile.jpg",
+        imageStuds: "images/kipsta_studs.jpg",
+        fallbackProfile: "https://contents.mediadecathlon.com/p1205262/7530f638acb2506f2ab4d9e6344a4c20/p1205262.jpg?format=auto&quality=70&f=800x0",
+        fallbackStuds: "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?auto=format&fit=crop&w=800&q=80",
+        svgCleatType: "kipsta",
+        weightGrams: 225,
+        upperMaterial: "Supple polyurethane upper with cushioned EVA insole",
+        description: "Engineered by Decathlon for long match comfort. Round conical studs reduce pressure hotspots on hard grounds, while the supple upper gives a clean ball touch.",
+        fitNotes: "Soft, accommodating fit. Perfect for players prone to blisters or sole aches.",
+        proPlayers: ["European Grassroots", "Amateur League Midfielders"],
+        sizesAvailable: [6, 7, 8, 9, 10, 11, 12],
+        studPenetration: 9.2
+      }
+    ];
+
+    // ========================================================
+    // 2. REAL FOOTBALL STUDS & SOLEPLATE PHOTOGRAPHIC VIEWER
+    // High-performance instant zero-delay dual-image renderer
+    // Both images pre-mounted in DOM to eliminate re-decoding lag
+    // ========================================================
+    function StudsProductPhoto({ item, viewMode = 'profile', className = 'h-52' }) {
+      const isSoleplate = viewMode === 'soleplate';
+
+      const getSrc = (relPath) => {
+        if (!relPath) return '';
+        if (relPath.startsWith('http://') || relPath.startsWith('https://')) return relPath;
+        if (typeof window !== 'undefined' && window.location.protocol === 'file:') {
+          return relPath.startsWith('/') ? relPath.slice(1) : relPath;
+        }
+        return relPath.startsWith('/') ? relPath : '/' + relPath;
+      };
+
+      return (
+        <div className={`relative w-full ${className} bg-[#0F1115] rounded-2xl overflow-hidden flex items-center justify-center p-3 border border-[#2A2F3A] group`}>
+          {/* Cleat Profile Image (Pre-rendered for 0ms Instant Toggle) */}
+          <img
+            src={getSrc(item.imageProfile)}
+            alt={`${item.name} - Cleat Profile`}
+            onError={(e) => {
+              if (item.fallbackProfile && e.target.src !== item.fallbackProfile) {
+                e.target.src = item.fallbackProfile;
+              }
+            }}
+            className={`absolute inset-0 m-auto max-h-[88%] max-w-[88%] object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)] transition-all duration-200 will-change-transform will-change-opacity group-hover:scale-105 ${
+              !isSoleplate ? 'opacity-100 scale-100 z-10 pointer-events-auto' : 'opacity-0 scale-95 z-0 pointer-events-none'
+            }`}
+            decoding="async"
+          />
+
+          {/* Bottom Studs Soleplate Image (Pre-rendered for 0ms Instant Toggle) */}
+          {item.imageStuds && (
+            <img
+              src={getSrc(item.imageStuds)}
+              alt={`${item.name} - Studs Soleplate`}
+              onError={(e) => {
+                if (item.fallbackStuds && e.target.src !== item.fallbackStuds) {
+                  e.target.src = item.fallbackStuds;
+                }
+              }}
+              className={`absolute inset-0 m-auto max-h-[88%] max-w-[88%] object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)] transition-all duration-200 will-change-transform will-change-opacity group-hover:scale-105 ${
+                isSoleplate ? 'opacity-100 scale-100 z-10 pointer-events-auto' : 'opacity-0 scale-95 z-0 pointer-events-none'
+              }`}
+              decoding="async"
+            />
+          )}
+
+          {/* Instant View Badge */}
+          <div className="absolute top-2.5 right-2.5 bg-[#14171E]/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-[#2A2F3A] text-[10px] font-mono-num font-bold flex items-center gap-1.5 shadow-md z-20 pointer-events-none">
+            <span className={isSoleplate ? "text-[#E5B80B]" : "text-[#34D399]"}>
+              {isSoleplate ? "⚙️" : "👟"}
+            </span>
+            <span className="text-[#F4F1EA]">
+              {isSoleplate ? "REAL STUDS VIEW" : "REAL CLEAT VIEW"}
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    // ========================================================
+    // 3. SIZING ALGORITHMS & MATCH COMPUTATION
+    // ========================================================
+    function calculateSizes(lengthCm) {
+      const len = parseFloat(lengthCm) || 27.0;
+      const internal = len + 1.0;
+      const eu = Math.round((internal * 1.5) * 2) / 2;
+      const ukIndia = Math.round(((eu - 33.5) / 1.33) * 2) / 2;
+      const us = Math.round((ukIndia + 0.5) * 2) / 2;
+      return { 
+        uk: Math.max(5, Math.min(12, ukIndia)), 
+        eu: Math.max(38, Math.min(48, eu)), 
+        us: Math.max(5.5, Math.min(13, us)) 
+      };
+    }
+
+    function classifyWidth(widthCm, lengthCm) {
+      const w = parseFloat(widthCm) || 10.0;
+      const l = parseFloat(lengthCm) || 27.0;
+      const ratio = w / l;
+      if (ratio < 0.355) return { category: "Narrow Fit", color: "text-[#E5B80B] bg-[#1A1D24] border-[#E5B80B]/40" };
+      if (ratio <= 0.385) return { category: "Standard Fit", color: "text-[#34D399] bg-[#1B4D3E]/40 border-[#34D399]/40" };
+      if (ratio <= 0.415) return { category: "Wide Fit (Nivia / Sega)", color: "text-[#E5B80B] bg-[#1A1D24] border-[#E5B80B]" };
+      return { category: "Extra Wide 2E (Sega Star)", color: "text-[#F4F1EA] bg-[#991b1b]/80 border-[#E5B80B]" };
+    }
+
+    function calculateMatch(studs, widthCm) {
+      const w = parseFloat(widthCm) || 10.0;
+      const { min, max } = studs.widthToleranceCm;
+      let score = 95;
+      let status = "Optimal Anatomical Fit";
+
+      if (w >= min && w <= max) {
+        const center = (min + max) / 2;
+        const dist = Math.abs(w - center);
+        score = Math.round(100 - (dist / ((max - min) / 2)) * 8);
+        status = "Optimal Anatomical Fit";
+      } else if (w < min) {
+        const diff = min - w;
+        score = Math.max(75, Math.round(92 - diff * 18));
+        status = "Comfort Roomy Stud Fit";
+      } else {
+        const diff = w - max;
+        score = Math.max(65, Math.round(88 - diff * 26));
+        status = diff > 0.5 ? "Pinch Risk (Too Narrow)" : "Snug Match Fit";
+      }
+
+      if (studs.brand === "Nivia" || studs.brand === "Sega") score = Math.min(100, score + 3);
+      return { score, status };
+    }
+
+    // ========================================================
+    // 4. ULTRA-REALISTIC 3D ANATOMICAL FOOT IN FOOTBALL SOCK
+    // ========================================================
+    function createRealisticFootSockGeometry() {
+      const geom = new THREE.BufferGeometry();
+      const vertices = [];
+      const uvs = [];
+      const indices = [];
+
+      const rings = [];
+
+      // 40 precision anatomical slices
+      // Lower Leg & Calf (0 to 11)
+      for (let i = 0; i <= 11; i++) {
+        const t = i / 11;
+        const y = 12.0 - t * 9.0;
+        const rWidth = 1.95 - t * 0.48;
+        const rDepth = 2.15 - t * 0.52;
+        const zOffset = -2.6 - t * 0.75;
+        rings.push({ center: [0, y, zOffset], rx: rWidth, ry: rDepth, isLeg: true });
+      }
+
+      // Ankle Malleolus & Heel Calcaneus (12 to 19)
+      for (let i = 1; i <= 8; i++) {
+        const t = i / 8;
+        const angle = (t * Math.PI) / 2;
+        const y = 3.0 - Math.sin(angle) * 2.3;
+        const z = -3.35 - Math.cos(angle) * 1.9 + t * 0.6;
+        const rx = 1.6 + Math.sin(t * Math.PI) * 0.42;
+        const ry = 1.9;
+        rings.push({ center: [0, Math.max(0.65, y), z], rx: rx, ry: ry, isTransition: true });
+      }
+
+      // Medial Arch & Instep (20 to 31)
+      for (let i = 1; i <= 12; i++) {
+        const t = i / 12;
+        const z = -3.2 + t * 5.6;
+        const archLift = Math.sin(t * Math.PI) * 0.55; // Noticeable real human arch lift!
+        const y = 0.85 + (1 - t) * 0.68;
+        const rx = 1.55 + t * 0.92;
+        const ry = 1.6 - t * 0.72;
+        rings.push({ center: [0.08, y, z], rx: rx, ry: ry, archLift: archLift, isSole: true });
+      }
+
+      // Toe Box (32 to 39)
+      for (let i = 1; i <= 8; i++) {
+        const t = i / 8;
+        const z = 2.4 + t * 2.65;
+        const y = 0.7 - t * 0.38;
+        const rx = Math.max(0.38, 2.48 * (1 - t * 0.68));
+        const ry = Math.max(0.28, 0.88 * (1 - t * 0.65));
+        const xOffset = -0.32 * t;
+        rings.push({ center: [xOffset, y, z], rx: rx, ry: ry, isToes: true });
+      }
+
+      const N_RADIAL = 32;
+
+      for (let r = 0; r < rings.length; r++) {
+        const ring = rings[r];
+        const cx = ring.center[0];
+        const cy = ring.center[1];
+        const cz = ring.center[2];
+
+        for (let j = 0; j < N_RADIAL; j++) {
+          const theta = (j / N_RADIAL) * Math.PI * 2;
+          let cos = Math.cos(theta);
+          let sin = Math.sin(theta);
+
+          let px = cx + cos * ring.rx;
+          let py, pz;
+
+          if (ring.isLeg) {
+            py = cy;
+            pz = cz + sin * ring.ry;
+          } else {
+            py = cy + sin * ring.ry;
+            if (py < 0.05) py = 0.05;
+            if (ring.archLift && cos < 0 && sin < 0) {
+              py += ring.archLift * (-cos) * (-sin);
+            }
+            pz = cz;
+          }
+
+          vertices.push(px, py, pz);
+          uvs.push(j / N_RADIAL, r / (rings.length - 1));
+        }
+      }
+
+      for (let r = 0; r < rings.length - 1; r++) {
+        for (let j = 0; j < N_RADIAL; j++) {
+          const nextJ = (j + 1) % N_RADIAL;
+          const i1 = r * N_RADIAL + j;
+          const i2 = (r + 1) * N_RADIAL + j;
+          const i3 = (r + 1) * N_RADIAL + nextJ;
+          const i4 = r * N_RADIAL + nextJ;
+
+          indices.push(i1, i2, i4);
+          indices.push(i2, i3, i4);
+        }
+      }
+
+      const tipIndex = vertices.length / 3;
+      const lastRing = rings[rings.length - 1];
+      vertices.push(lastRing.center[0], 0.32, lastRing.center[2] + 0.35);
+      uvs.push(0.5, 1.0);
+
+      const lastRingOffset = (rings.length - 1) * N_RADIAL;
+      for (let j = 0; j < N_RADIAL; j++) {
+        const nextJ = (j + 1) % N_RADIAL;
+        indices.push(lastRingOffset + j, tipIndex, lastRingOffset + nextJ);
+      }
+
+      geom.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+      geom.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+      geom.setIndex(indices);
+      geom.computeVertexNormals();
+      return geom;
+    }
+
+    function generateSockTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 1024;
+      const ctx = canvas.getContext('2d');
+
+      // Base Sock: Charcoal / Crimson Knit
+      ctx.fillStyle = '#991B1B';
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      // Fine woven knit texture
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < 1024; x += 4) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 1024);
+        ctx.stroke();
+      }
+
+      // Calf Cuff: Warm Ivory with Metallic Gold Stripe
+      ctx.fillStyle = '#F4F1EA';
+      ctx.fillRect(0, 30, 1024, 60);
+      ctx.fillStyle = '#E5B80B';
+      ctx.fillRect(0, 100, 1024, 25);
+      ctx.fillStyle = '#F4F1EA';
+      ctx.fillRect(0, 135, 1024, 30);
+
+      // Compression Shin Chevrons in Warm Ivory
+      ctx.fillStyle = '#F4F1EA';
+      for (let i = 0; i < 3; i++) {
+        const yPos = 210 + i * 55;
+        ctx.beginPath();
+        ctx.moveTo(512, yPos);
+        ctx.lineTo(540, yPos + 30);
+        ctx.lineTo(530, yPos + 30);
+        ctx.lineTo(512, yPos + 12);
+        ctx.lineTo(494, yPos + 30);
+        ctx.lineTo(484, yPos + 30);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Instep Arch Band (Dark Turf Tone)
+      ctx.fillStyle = '#1B4D3E';
+      ctx.fillRect(0, 560, 1024, 90);
+      ctx.fillStyle = '#E5B80B';
+      ctx.fillRect(0, 595, 1024, 20);
+
+      // Heel & Toe Guard
+      ctx.fillStyle = '#1A1D24';
+      ctx.fillRect(0, 420, 1024, 65);
+      ctx.fillRect(0, 940, 1024, 84);
+
+      // Silicone Anti-Slip Hexagonal Grip Pads (Metallic Gold)
+      ctx.fillStyle = '#E5B80B';
+      for (let row = 0; row < 7; row++) {
+        for (let col = 0; col < 12; col++) {
+          const px = 40 + col * 82;
+          const py = 720 + row * 28;
+          ctx.beginPath();
+          ctx.arc(px, py, 6, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.ClampToEdgeWrapping;
+      return texture;
+    }
+
+    function Foot3DViewer({ lengthCm, widthCm }) {
+      const mountRef = useRef(null);
+      const footMeshRef = useRef(null);
+      const lengthCaliperRef = useRef(null);
+      const widthCaliperRef = useRef(null);
+      const controlsRef = useRef(null);
+      const cameraRef = useRef(null);
+      const [isRotating, setIsRotating] = useState(true);
+
+      useEffect(() => {
+        const mount = mountRef.current;
+        if (!mount) return;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0F1115); // Deep Obsidian
+
+        const width = mount.clientWidth || 600;
+        const height = mount.clientHeight || 500;
+
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+        camera.position.set(22, 16, 26);
+        cameraRef.current = camera;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.15;
+        mount.appendChild(renderer.domElement);
+
+        let controls = null;
+        if (typeof THREE.OrbitControls === 'function') {
+          controls = new THREE.OrbitControls(camera, renderer.domElement);
+          controls.enableDamping = true;
+          controls.dampingFactor = 0.05;
+          controls.maxDistance = 55;
+          controls.minDistance = 12;
+          controlsRef.current = controls;
+        }
+
+        // Lighting
+        scene.add(new THREE.AmbientLight(0xF4F1EA, 1.8));
+        const keyLight = new THREE.DirectionalLight(0xF4F1EA, 2.5);
+        keyLight.position.set(16, 26, 18);
+        keyLight.castShadow = true;
+        scene.add(keyLight);
+
+        const goldRim = new THREE.DirectionalLight(0xE5B80B, 2.0);
+        goldRim.position.set(-18, 14, -16);
+        scene.add(goldRim);
+
+        // Ground Platform with Turf Ring
+        const ringGeo = new THREE.RingGeometry(13.8, 14.1, 64);
+        const outerRing = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: 0x1B4D3E, side: THREE.DoubleSide }));
+        outerRing.rotation.x = Math.PI / 2;
+        scene.add(outerRing);
+
+        const grid = new THREE.GridHelper(30, 24, 0xE5B80B, 0x1A1D24);
+        grid.position.y = -0.02;
+        scene.add(grid);
+
+        // 3D Realistic Foot Mesh
+        const sockTexture = generateSockTexture();
+        const sockMaterial = new THREE.MeshStandardMaterial({
+          map: sockTexture,
+          roughness: 0.65,
+          metalness: 0.08
+        });
+
+        const footGeo = createRealisticFootSockGeometry();
+        const footMesh = new THREE.Mesh(footGeo, sockMaterial);
+        footMesh.castShadow = true;
+        footMesh.receiveShadow = true;
+        footMeshRef.current = footMesh;
+        scene.add(footMesh);
+
+        // Laser Calipers
+        const lenGroup = new THREE.Group();
+        lengthCaliperRef.current = lenGroup;
+        scene.add(lenGroup);
+
+        const goldLineMat = new THREE.LineBasicMaterial({ color: 0xE5B80B, linewidth: 3 });
+        const lenGeo = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(-3.8, 0.1, -5.8),
+          new THREE.Vector3(-3.8, 0.1, 5.2)
+        ]);
+        lenGroup.add(new THREE.Line(lenGeo, goldLineMat));
+
+        const makeTick = (p1, p2) => {
+          const g = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+          return new THREE.Line(g, new THREE.LineBasicMaterial({ color: 0xE5B80B, linewidth: 2 }));
+        };
+        lenGroup.add(makeTick(new THREE.Vector3(-4.8, 0.1, -5.8), new THREE.Vector3(-2.8, 0.1, -5.8)));
+        lenGroup.add(makeTick(new THREE.Vector3(-4.8, 0.1, 5.2), new THREE.Vector3(-2.8, 0.1, 5.2)));
+
+        const widGroup = new THREE.Group();
+        widthCaliperRef.current = widGroup;
+        scene.add(widGroup);
+
+        const widGeo = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(-3.2, 0.1, 2.0),
+          new THREE.Vector3(3.4, 0.1, 2.0)
+        ]);
+        widGroup.add(new THREE.Line(widGeo, new THREE.LineBasicMaterial({ color: 0x34D399, linewidth: 3 })));
+        widGroup.add(makeTick(new THREE.Vector3(-3.2, 0.1, 1.0), new THREE.Vector3(-3.2, 0.1, 3.0)));
+        widGroup.add(makeTick(new THREE.Vector3(3.4, 0.1, 1.0), new THREE.Vector3(3.4, 0.1, 3.0)));
+
+        let frameId;
+        const animate = () => {
+          frameId = requestAnimationFrame(animate);
+          if (isRotating && footMeshRef.current) {
+            footMeshRef.current.rotation.y += 0.003;
+          }
+          if (controlsRef.current) controlsRef.current.update();
+          renderer.render(scene, camera);
+        };
+        animate();
+
+        const handleResize = () => {
+          if (!mount) return;
+          const w = mount.clientWidth;
+          const h = mount.clientHeight;
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+          renderer.setSize(w, h);
+        };
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+          window.removeEventListener('resize', handleResize);
+          cancelAnimationFrame(frameId);
+          if (mount && renderer.domElement) mount.removeChild(renderer.domElement);
+          renderer.dispose();
+        };
+      }, []);
+
+      useEffect(() => {
+        if (!footMeshRef.current) return;
+        const scaleZ = parseFloat(lengthCm) / 27.0;
+        const scaleX = parseFloat(widthCm) / 10.0;
+        footMeshRef.current.scale.set(scaleX, 1.0, scaleZ);
+
+        if (lengthCaliperRef.current) lengthCaliperRef.current.scale.set(1.0, 1.0, scaleZ);
+        if (widthCaliperRef.current) widthCaliperRef.current.scale.set(scaleX, 1.0, 1.0);
+      }, [lengthCm, widthCm]);
+
+      const setPreset = (view) => {
+        if (!cameraRef.current) return;
+        setIsRotating(false);
+        const c = cameraRef.current;
+        if (view === 'top') c.position.set(0.01, 32, 0.01);
+        else if (view === 'side') c.position.set(-28, 7, 0);
+        else if (view === 'sole') c.position.set(0.01, 3, -28);
+        else if (view === 'iso') c.position.set(22, 16, 26);
+        if (controlsRef.current) {
+          controlsRef.current.target.set(0, 2.5, 0);
+          controlsRef.current.update();
+        }
+      };
+
+      return (
+        <div className="relative w-full h-[480px] lg:h-[560px] bg-[#14171E] rounded-3xl overflow-hidden border-2 border-[#2A2F3A] hover:border-[#E5B80B]/50 transition shadow-2xl">
+          <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+          
+          {/* Top HUD */}
+          <div className="absolute top-4 left-4 right-4 flex justify-between items-center pointer-events-none">
+            <div className="flex items-center gap-2.5 bg-[#0F1115]/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-[#2A2F3A] pointer-events-auto">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#E5B80B] animate-ping"></span>
+              <span className="text-xs font-bold text-[#F4F1EA] tracking-wide">
+                3D FOOT ANATOMY & TEAM SOCK
+              </span>
+            </div>
+
+            <button
+              onClick={() => setIsRotating(!isRotating)}
+              className="pointer-events-auto px-3 py-1.5 text-xs font-mono rounded-xl bg-[#1A1D24] border border-[#2A2F3A] text-[#A0A6B1] hover:text-[#F4F1EA] hover:border-[#E5B80B] transition"
+            >
+              {isRotating ? 'Rotation: ON' : 'Rotation: Paused'}
+            </button>
+          </div>
+
+          {/* Real-time Measurements Badges */}
+          <div className="absolute bottom-16 left-4 flex flex-col gap-2.5 pointer-events-none font-mono-num">
+            <div className="bg-[#1A1D24]/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-[#E5B80B] text-xs shadow-lg">
+              <span className="text-[#E5B80B] block text-[10px] uppercase font-bold">FOOT LENGTH (HEEL-TO-TOE)</span>
+              <span className="font-extrabold text-[#F4F1EA] text-base">{lengthCm} cm</span>
+              <span className="text-[11px] text-[#A0A6B1] ml-1.5">({(lengthCm * 10).toFixed(0)} mm)</span>
+            </div>
+
+            <div className="bg-[#1A1D24]/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-[#34D399] text-xs shadow-lg">
+              <span className="text-[#34D399] block text-[10px] uppercase font-bold">FOREFOOT WIDTH (BALL)</span>
+              <span className="font-extrabold text-[#F4F1EA] text-base">{widthCm} cm</span>
+              <span className="text-[11px] text-[#A0A6B1] ml-1.5">({(widthCm * 10).toFixed(0)} mm)</span>
+            </div>
+          </div>
+
+          {/* View Toolbar */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-[#0F1115]/90 backdrop-blur-md p-1.5 rounded-2xl border border-[#2A2F3A] shadow-xl">
+            <span className="text-[11px] font-bold text-[#A0A6B1] px-2">Angle:</span>
+            {[
+              { id: 'iso', label: '3D Iso' },
+              { id: 'top', label: 'Top (Plan)' },
+              { id: 'side', label: 'Arch Profile' },
+              { id: 'sole', label: 'Sole Grips' }
+            ].map(view => (
+              <button
+                key={view.id}
+                onClick={() => setPreset(view.id)}
+                className="px-2.5 py-1 text-xs font-semibold rounded-xl uppercase text-[#F4F1EA] hover:bg-[#1A1D24] hover:text-[#E5B80B] transition"
+              >
+                {view.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // ========================================================
+    // 5. MAIN APPLICATION ORCHESTRATOR
+    // ========================================================
+    function App() {
+      // Step: 'measure' | 'catalog' | 'checkout' | 'tracking'
+      const [currentStep, setCurrentStep] = useState('measure');
+      const [measurements, setMeasurements] = useState({
+        lengthCm: 27.2,
+        widthCm: 10.4,
+        sizeUK: 8,
+        sizeEU: 42.5,
+        sizeUS: 8.5
+      });
+
+      const [cart, setCart] = useState([]);
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [checkoutItems, setCheckoutItems] = useState([]);
+      const [lastOrder, setLastOrder] = useState({
+        orderId: 'ES-IND-849201',
+        total: 1249,
+        items: [FOOTBALL_STUDS[0]],
+        address: {
+          fullName: 'Rohit Sharma',
+          phone: '+91 98765 43210',
+          street: 'Flat 402, Greenfield Sports Complex',
+          city: 'Mumbai',
+          postalCode: '400050'
+        },
+        paymentMethod: 'UPI (Google Pay)',
+        dispatchDate: 'Today, 2:30 PM',
+        expectedDelivery: 'In 2-3 Business Days'
+      });
+      const [toast, setToast] = useState(null);
+
+      const sizes = useMemo(() => calculateSizes(measurements.lengthCm), [measurements.lengthCm]);
+      const widthClass = useMemo(() => classifyWidth(measurements.widthCm, measurements.lengthCm), [measurements.widthCm, measurements.lengthCm]);
+
+      useEffect(() => {
+        setMeasurements(m => ({ ...m, sizeUK: sizes.uk, sizeEU: sizes.eu, sizeUS: sizes.us }));
+      }, [sizes]);
+
+      useEffect(() => {
+        if (toast) {
+          const t = setTimeout(() => setToast(null), 3000);
+          return () => clearTimeout(t);
+        }
+      }, [toast]);
+
+      // Preload all cleat & stud images into browser cache for instant 0ms switching
+      useEffect(() => {
+        FOOTBALL_STUDS.forEach(boot => {
+          if (boot.imageProfile) {
+            const p = new Image();
+            p.src = boot.imageProfile;
+          }
+          if (boot.imageStuds) {
+            const s = new Image();
+            s.src = boot.imageStuds;
+          }
+        });
+      }, []);
+
+      const handleAddToCart = (studs, size) => {
+        const itemSize = size || measurements.sizeUK;
+        setCart(prev => {
+          const existing = prev.find(i => i.id === studs.id && i.selectedSize === itemSize);
+          if (existing) {
+            return prev.map(i => i.id === studs.id && i.selectedSize === itemSize ? { ...i, quantity: i.quantity + 1 } : i);
+          }
+          return [...prev, { ...studs, selectedSize: itemSize, quantity: 1 }];
+        });
+        setToast(`Added ${studs.name} (UK ${itemSize}) to your Cart!`);
+      };
+
+      const handleDirectBuy = (studs, size) => {
+        const itemSize = size || measurements.sizeUK;
+        setCheckoutItems([{ ...studs, selectedSize: itemSize, quantity: 1 }]);
+        setCurrentStep('checkout');
+      };
+
+      const updateQty = (id, size, delta) => {
+        setCart(prev => prev.map(i => {
+          if (i.id === id && i.selectedSize === size) {
+            const newQ = i.quantity + delta;
+            return newQ > 0 ? { ...i, quantity: newQ } : null;
+          }
+          return i;
+        }).filter(Boolean));
+      };
+
+      const cartCount = cart.reduce((acc, i) => acc + i.quantity, 0);
+
+      return (
+        <div className="min-h-screen flex flex-col font-sans bg-[#0F1115] text-[#F4F1EA]">
+          {/* DUMMY WEBSITE & ZERO MONEY DEDUCTION ANNOUNCEMENT BANNER */}
+          <div className="bg-[#1B4D3E] text-[#F4F1EA] text-[11px] sm:text-xs font-semibold py-2 px-4 border-b border-[#34D399]/40 flex flex-wrap items-center justify-center gap-2 text-center shadow-inner">
+            <span className="inline-flex items-center gap-1.5 bg-[#0F1115]/60 px-2.5 py-0.5 rounded-full border border-[#34D399]/50 text-[#34D399] text-[10px] uppercase font-bold tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-[#34D399] animate-pulse"></span>
+              DEMO ONLY
+            </span>
+            <span>
+              <strong>Demonstration Prototype:</strong> Expecto Soleum is a dummy showcase website. <strong>No deduction of money will be made</strong>, and all checkout & booking flows are 100% simulated.
+            </span>
+          </div>
+
+          {/* HEADER / NAVIGATION BAR */}
+          <header className="sticky top-0 z-40 bg-[#0F1115]/95 backdrop-blur-xl border-b border-[#2A2F3A] shadow-xl">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+              {/* Brand Logo */}
+              <div onClick={() => setCurrentStep('measure')} className="flex items-center gap-3 cursor-pointer group">
+                <div className="w-11 h-11 rounded-2xl bg-[#E5B80B] text-[#0F1115] flex items-center justify-center font-black text-2xl shadow-lg border border-[#F4F1EA] group-hover:scale-105 transition">
+                  ⚡
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl sm:text-2xl font-black tracking-tight text-[#F4F1EA] uppercase group-hover:text-[#E5B80B] transition">
+                      Expecto Soleum
+                    </span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1B4D3E] text-[#34D399] border border-[#34D399]/40">
+                      STUDS LAB
+                    </span>
+                    <span className="hidden sm:inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E5B80B]/20 text-[#E5B80B] border border-[#E5B80B]/40">
+                      DUMMY DEMO • ₹0 CHARGED
+                    </span>
+                  </div>
+                  <p className="text-[11px] font-medium text-[#A0A6B1]">
+                    Football Studs & Cleats Precision Biometrics
+                  </p>
+                </div>
+              </div>
+
+              {/* Steps Progress */}
+              <div className="hidden md:flex items-center gap-2 bg-[#1A1D24] border border-[#2A2F3A] px-3 py-1.5 rounded-2xl text-xs font-bold">
+                <button
+                  onClick={() => setCurrentStep('measure')}
+                  className={`px-3.5 py-1 rounded-xl transition ${currentStep === 'measure' ? 'bg-[#E5B80B] text-[#0F1115] font-black shadow-md' : 'text-[#A0A6B1] hover:text-[#F4F1EA]'}`}
+                >
+                  1. Foot & Sock Scan
+                </button>
+                <span className="text-[#A0A6B1]">→</span>
+                <button
+                  onClick={() => setCurrentStep('catalog')}
+                  className={`px-3.5 py-1 rounded-xl transition ${currentStep === 'catalog' ? 'bg-[#E5B80B] text-[#0F1115] font-black shadow-md' : 'text-[#A0A6B1] hover:text-[#F4F1EA]'}`}
+                >
+                  2. Matched Studs
+                </button>
+                <span className="text-[#A0A6B1]">→</span>
+                <button
+                  onClick={() => {
+                    if (cart.length > 0) {
+                      setCheckoutItems(cart);
+                      setCurrentStep('checkout');
+                    } else {
+                      setToast('Select your studs or add to cart first!');
+                    }
+                  }}
+                  className={`px-3.5 py-1 rounded-xl transition ${currentStep === 'checkout' ? 'bg-[#E5B80B] text-[#0F1115] font-black shadow-md' : 'text-[#A0A6B1] hover:text-[#F4F1EA]'}`}
+                >
+                  3. Order Summary
+                </button>
+                <span className="text-[#A0A6B1]">→</span>
+                <button
+                  onClick={() => setCurrentStep('tracking')}
+                  className={`px-3.5 py-1 rounded-xl transition ${currentStep === 'tracking' ? 'bg-[#E5B80B] text-[#0F1115] font-black shadow-md' : 'text-[#A0A6B1] hover:text-[#F4F1EA]'}`}
+                >
+                  4. Track Booking
+                </button>
+              </div>
+
+              {/* Action Buttons: Track Booking & Cart */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setCurrentStep('tracking')}
+                  className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-[#E5B80B] hover:text-[#F4F1EA] bg-[#1A1D24] px-3 py-2 rounded-xl border border-[#2A2F3A] transition"
+                >
+                  <span>📦</span>
+                  <span>Track Booking</span>
+                </button>
+
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="relative px-4 py-2 rounded-2xl bg-[#E5B80B] hover:bg-yellow-400 text-[#0F1115] flex items-center gap-2.5 transition shadow-lg font-black"
+                >
+                  <span className="text-base">🛒</span>
+                  <span className="text-xs">Cart</span>
+                  {cartCount > 0 && (
+                    <span className="px-2 py-0.5 rounded-full bg-[#0F1115] text-[#E5B80B] text-xs font-black animate-pulse">
+                      {cartCount}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {/* Toast Notification */}
+          {toast && (
+            <div className="fixed top-24 right-6 z-50 bg-[#1A1D24] text-[#F4F1EA] px-5 py-3 rounded-2xl font-bold text-xs shadow-2xl flex items-center gap-3 border-2 border-[#E5B80B] animate-fadeIn">
+              <span className="text-[#E5B80B]">⚡</span>
+              <span>{toast}</span>
+              <button onClick={() => setIsCartOpen(true)} className="underline text-[#E5B80B] font-extrabold ml-2">
+                Open Cart
+              </button>
+            </div>
+          )}
+
+          {/* SLIDE-OVER CART DRAWER */}
+          {isCartOpen && (
+            <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn">
+              <div onClick={() => setIsCartOpen(false)} className="fixed inset-0 bg-black/75 backdrop-blur-sm" />
+              <div className="relative w-full max-w-md bg-[#1A1D24] border-l-2 border-[#2A2F3A] h-full flex flex-col justify-between shadow-2xl z-10 animate-slideRight p-6">
+                <div>
+                  <div className="flex justify-between items-center pb-4 border-b border-[#2A2F3A]">
+                    <h3 className="text-lg font-extrabold text-[#F4F1EA] flex items-center gap-2">
+                      <span>⚽</span> Football Studs Cart ({cartCount})
+                    </h3>
+                    <button onClick={() => setIsCartOpen(false)} className="text-[#A0A6B1] hover:text-[#F4F1EA] p-1 text-sm">✕</button>
+                  </div>
+
+                  <div className="mt-4 space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+                    {cart.length === 0 ? (
+                      <div className="text-center py-16 text-[#A0A6B1]">
+                        <div className="text-4xl mb-2">👟</div>
+                        <p className="text-sm font-semibold">Your Cart is currently empty</p>
+                        <p className="text-xs text-[#A0A6B1] mt-1">Calibrate measurements to select your studs</p>
+                      </div>
+                    ) : (
+                      cart.map(item => (
+                        <div key={`${item.id}-${item.selectedSize}`} className="bg-[#14171E] border border-[#2A2F3A] rounded-2xl p-3.5 flex gap-3 items-center">
+                          <div className="w-16 h-16 bg-[#0F1115] rounded-xl flex items-center justify-center p-1 border border-[#2A2F3A] overflow-hidden">
+                            <img
+                              src={item.imageProfile}
+                              alt={item.name}
+                              onError={(e) => {
+                                if (item.fallbackProfile && e.target.src !== item.fallbackProfile) {
+                                  e.target.src = item.fallbackProfile;
+                                }
+                              }}
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-[10px] font-black text-[#E5B80B] uppercase">{item.brand} • {item.surface}</span>
+                            <h4 className="text-xs font-bold text-[#F4F1EA] leading-tight">{item.name}</h4>
+                            <div className="flex justify-between items-center mt-1">
+                              <span className="text-xs font-mono-num text-[#A0A6B1]">Size: UK/IND {item.selectedSize}</span>
+                              <span className="text-xs font-black text-[#E5B80B] font-mono-num">₹{item.priceInr}</span>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                              <div className="flex items-center border border-[#2A2F3A] rounded-lg bg-[#0F1115] text-xs">
+                                <button onClick={() => updateQty(item.id, item.selectedSize, -1)} className="px-2 py-0.5 text-[#A0A6B1] hover:text-[#F4F1EA] font-bold">-</button>
+                                <span className="px-2 font-mono-num font-bold text-[#F4F1EA]">{item.quantity}</span>
+                                <button onClick={() => updateQty(item.id, item.selectedSize, 1)} className="px-2 py-0.5 text-[#A0A6B1] hover:text-[#F4F1EA] font-bold">+</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                {cart.length > 0 && (
+                  <div className="pt-4 border-t border-[#2A2F3A] space-y-3 font-mono-num text-xs">
+                    <div className="flex justify-between text-[#A0A6B1]">
+                      <span>Subtotal</span>
+                      <span className="text-[#F4F1EA] font-bold">₹{cart.reduce((a, b) => a + b.priceInr * b.quantity, 0).toLocaleString('en-IN')}</span>
+                    </div>
+                    <div className="flex justify-between text-[#A0A6B1]">
+                      <span>Express Sports Delivery</span>
+                      <span className="text-[#34D399] font-bold">FREE (₹0)</span>
+                    </div>
+                    <div className="flex justify-between text-[#A0A6B1]">
+                      <span>Extra Match Laces</span>
+                      <span className="text-[#E5B80B] font-bold">INCLUDED</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setCheckoutItems(cart);
+                        setIsCartOpen(false);
+                        setCurrentStep('checkout');
+                      }}
+                      className="w-full py-3.5 rounded-2xl bg-[#E5B80B] hover:bg-yellow-400 text-[#0F1115] font-black text-sm uppercase tracking-wider transition shadow-xl"
+                    >
+                      Proceed to Order Summary →
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* MAIN PAGE VIEWPORT */}
+          <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            {/* SCREEN 1: 3D FOOT IN SOCKS & MEASUREMENTS */}
+            {currentStep === 'measure' && (
+              <div className="space-y-8 animate-fadeIn">
+                <div className="text-center max-w-3xl mx-auto">
+                  <span className="text-xs font-bold text-[#E5B80B] uppercase tracking-wider bg-[#1A1D24] px-4 py-1.5 rounded-full border border-[#2A2F3A] shadow-md">
+                    ⚡ Budget Football Studs Precision Lab
+                  </span>
+                  <h1 className="text-3xl sm:text-5xl font-black text-[#F4F1EA] tracking-tight mt-3">
+                    Find Football Studs by <br />
+                    <span className="bg-gradient-to-r from-[#E5B80B] via-yellow-300 to-[#F4F1EA] bg-clip-text text-transparent">
+                      Exact Length & Width Measurements.
+                    </span>
+                  </h1>
+                  <p className="text-sm text-[#A0A6B1] mt-2 max-w-xl mx-auto leading-relaxed">
+                    Rotate the <strong>3D foot in team football socks</strong>, dial in your millimeters, and filter budget-friendly studs from <strong>Nivia, Sega, Vector X, and Kipsta</strong> designed for Indian pitch conditions and wide feet.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                  {/* Left: 3D Foot Viewer */}
+                  <div className="lg:col-span-7">
+                    <Foot3DViewer lengthCm={measurements.lengthCm} widthCm={measurements.widthCm} />
+                  </div>
+
+                  {/* Right: Measurements Input Card */}
+                  <div className="lg:col-span-5 bg-[#1A1D24] border-2 border-[#2A2F3A] hover:border-[#E5B80B]/60 transition rounded-3xl p-6 lg:p-8 shadow-2xl flex flex-col justify-between space-y-6">
+                    <div>
+                      <div className="flex items-center justify-between pb-3 border-b border-[#2A2F3A]">
+                        <div>
+                          <span className="text-xs font-bold text-[#E5B80B] uppercase">Step 1 • Calibrate Dimensions</span>
+                          <h2 className="text-2xl font-black text-[#F4F1EA] mt-0.5">Foot Measurements</h2>
+                        </div>
+                        <div className="w-10 h-10 rounded-xl bg-[#0F1115] border border-[#2A2F3A] flex items-center justify-center text-[#E5B80B] font-bold text-lg">
+                          📏
+                        </div>
+                      </div>
+
+                      <div className="mt-5 space-y-5">
+                        {/* Length Slider */}
+                        <div className="bg-[#14171E] p-4 rounded-2xl border border-[#2A2F3A]">
+                          <div className="flex justify-between items-center mb-2">
+                            <label className="text-xs font-bold text-[#F4F1EA]">
+                              Heel-to-Toe Length:
+                            </label>
+                            <span className="text-base font-mono-num font-bold text-[#E5B80B]">{measurements.lengthCm} cm</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="23.0"
+                            max="32.0"
+                            step="0.1"
+                            value={measurements.lengthCm}
+                            onChange={(e) => setMeasurements({ ...measurements, lengthCm: parseFloat(e.target.value) })}
+                            className="w-full accent-[#E5B80B] cursor-pointer"
+                          />
+                          <div className="flex justify-between text-[10px] text-[#A0A6B1] font-mono-num mt-1">
+                            <span>23.0 cm (UK 5)</span>
+                            <span>27.0 cm (UK 8)</span>
+                            <span>31.5 cm (UK 12)</span>
+                          </div>
+                        </div>
+
+                        {/* Width Slider */}
+                        <div className="bg-[#14171E] p-4 rounded-2xl border border-[#2A2F3A]">
+                          <div className="flex justify-between items-center mb-2">
+                            <label className="text-xs font-bold text-[#F4F1EA]">
+                              Forefoot Width (Metatarsal Ball):
+                            </label>
+                            <span className="text-base font-mono-num font-bold text-[#34D399]">{measurements.widthCm} cm</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="8.5"
+                            max="12.0"
+                            step="0.1"
+                            value={measurements.widthCm}
+                            onChange={(e) => setMeasurements({ ...measurements, widthCm: parseFloat(e.target.value) })}
+                            className="w-full accent-[#34D399] cursor-pointer"
+                          />
+                          <div className="mt-2.5 flex items-center gap-2 p-2 rounded-xl bg-[#0F1115] border border-[#2A2F3A]">
+                            <span className={`text-xs px-2.5 py-0.5 rounded-lg font-bold border ${widthClass.color}`}>
+                              {widthClass.category}
+                            </span>
+                            <span className="text-[11px] text-[#A0A6B1] font-mono-num">Ratio: {(measurements.widthCm / measurements.lengthCm).toFixed(2)}</span>
+                          </div>
+                        </div>
+
+                        {/* Recommended Size Box */}
+                        <div className="bg-[#14171E] p-4 rounded-2xl border border-[#2A2F3A] flex justify-between items-center">
+                          <div>
+                            <span className="text-xs font-bold text-[#F4F1EA] block">Recommended Stud Size</span>
+                            <span className="text-[11px] text-[#A0A6B1]">+1.0cm pitch sprint clearance</span>
+                          </div>
+                          <div className="flex gap-2 text-center font-mono-num">
+                            <div className="bg-[#1A1D24] border border-[#E5B80B] px-3 py-1.5 rounded-xl">
+                              <span className="text-[10px] text-[#E5B80B] block font-bold">UK / IND</span>
+                              <span className="text-base font-black text-[#F4F1EA]">{sizes.uk}</span>
+                            </div>
+                            <div className="bg-[#0F1115] border border-[#2A2F3A] px-3 py-1.5 rounded-xl">
+                              <span className="text-[10px] text-[#A0A6B1] block font-bold">EU</span>
+                              <span className="text-base font-bold text-[#F4F1EA]">{sizes.eu}</span>
+                            </div>
+                            <div className="bg-[#0F1115] border border-[#2A2F3A] px-3 py-1.5 rounded-xl">
+                              <span className="text-[10px] text-[#A0A6B1] block font-bold">US</span>
+                              <span className="text-base font-bold text-[#F4F1EA]">{sizes.us}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* VAMOS! NEXT BUTTON */}
+                    <button
+                      onClick={() => setCurrentStep('catalog')}
+                      className="w-full py-4 rounded-2xl bg-[#E5B80B] hover:bg-yellow-400 text-[#0F1115] font-black text-base tracking-wider shadow-2xl active:scale-95 transition flex items-center justify-center gap-3 uppercase glow-gold"
+                    >
+                      <span>VAMOS! FIND MY FOOTBALL STUDS</span>
+                      <span className="text-xl">→</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SCREEN 2: FILTERED STUDS CATALOG */}
+            {currentStep === 'catalog' && (
+              <div className="space-y-6 animate-fadeIn">
+                {/* Active Filter Bar */}
+                <div className="bg-[#1A1D24] border-2 border-[#2A2F3A] rounded-3xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
+                  <div>
+                    <span className="text-xs font-bold text-[#E5B80B] uppercase tracking-wider">
+                      ⚡ Active Biometric Filter Applied
+                    </span>
+                    <h2 className="text-2xl font-black text-[#F4F1EA] mt-0.5">Budget Football Studs & Cleats (₹ INR)</h2>
+                    <p className="text-xs font-mono-num text-[#A0A6B1] mt-1">
+                      Filtering for: <strong className="text-[#E5B80B]">{measurements.lengthCm} cm</strong> Length • <strong className="text-[#34D399]">{measurements.widthCm} cm</strong> Width ({widthClass.category}) • <strong className="text-[#F4F1EA]">Size UK/IND {sizes.uk}</strong> (EU {sizes.eu})
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentStep('measure')}
+                    className="px-4 py-2 bg-[#0F1115] hover:bg-black text-[#F4F1EA] text-xs font-bold rounded-2xl border border-[#2A2F3A] hover:border-[#E5B80B] transition flex items-center gap-2"
+                  >
+                    <span>← Re-calibrate 3D Scan</span>
+                  </button>
+                </div>
+
+                {/* Studs Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {FOOTBALL_STUDS.map(studs => {
+                    const match = calculateMatch(studs, measurements.widthCm);
+                    return (
+                      <StudCardItem
+                        key={studs.id}
+                        studs={studs}
+                        match={match}
+                        defaultSize={sizes.uk}
+                        onAddToCart={(size) => handleAddToCart(studs, size)}
+                        onDirectBuy={(size) => handleDirectBuy(studs, size)}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* SCREEN 3: CHECKOUT FLOW */}
+            {currentStep === 'checkout' && (
+              <CheckoutFlow
+                items={checkoutItems.length > 0 ? checkoutItems : cart}
+                measurements={measurements}
+                onBack={() => setCurrentStep('catalog')}
+                onComplete={(order) => {
+                  setLastOrder(order);
+                  setCart([]);
+                  setCurrentStep('tracking');
+                }}
+              />
+            )}
+
+            {/* SCREEN 4: BOOKING STATUS & ORDER TRACKING PAGE */}
+            {currentStep === 'tracking' && lastOrder && (
+              <BookingStatusPage
+                order={lastOrder}
+                measurements={measurements}
+                onRestart={() => setCurrentStep('measure')}
+                onBackToCatalog={() => setCurrentStep('catalog')}
+              />
+            )}
+          </main>
+
+          {/* SITE FOOTER & LEGAL DEMO DISCLAIMER */}
+          <footer className="mt-auto border-t border-[#2A2F3A] bg-[#0A0C0F] py-8 px-4 text-center text-xs text-[#A0A6B1]">
+            <div className="max-w-4xl mx-auto space-y-3">
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-sm font-black text-[#E5B80B] tracking-wider uppercase">⚡ EXPECTO SOLEUM</span>
+                <span className="text-[#A0A6B1]">•</span>
+                <span className="text-xs text-[#34D399] font-bold">Football Studs Biometric Fitting Lab</span>
+              </div>
+              <p className="text-[11px] text-[#A0A6B1] max-w-2xl mx-auto leading-relaxed">
+                <strong>Disclaimer:</strong> This website is an educational demonstration and prototype showcase. <strong>No deduction of money will be made</strong>, and no real commercial charges will ever occur. All brand names, cleat models, and logos (Nivia, Sega, Kipsta, Vector X) belong to their respective copyright holders.
+              </p>
+              <div className="inline-flex items-center gap-2 text-[10px] text-[#34D399] font-mono-num bg-[#1B4D3E]/30 px-3.5 py-1 rounded-full border border-[#34D399]/30">
+                <span>🛡️</span>
+                <span>Safe Demonstration Sandbox • 100% Simulated Flow • ₹0 Billed</span>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    // ========================================================
+    // 6. STUDS CARD WITH EXPLICIT SOLEPLATE & STUDS BLUEPRINT
+    // High-contrast, clean readability with Warm Ivory on Dark Charcoal
+    // ========================================================
+    function StudCardItem({ studs, match, defaultSize, onAddToCart, onDirectBuy }) {
+      const [viewMode, setViewMode] = useState('profile'); // 'profile' | 'soleplate'
+      const [chosenSize, setChosenSize] = useState(defaultSize || 8);
+
+      return (
+        <div className="relative bg-[#1A1D24] text-[#F4F1EA] border-2 border-[#2A2F3A] hover:border-[#E5B80B] rounded-3xl overflow-hidden transition-all duration-300 flex flex-col justify-between group shadow-xl">
+          {/* Top Visual Section */}
+          <div className="relative p-4 bg-[#14171E] border-b border-[#2A2F3A]">
+            {/* Top Badges */}
+            <div className="flex justify-between items-center mb-3">
+              <div className="flex gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0F1115] text-[#E5B80B] font-black text-[10px] tracking-wider uppercase border border-[#2A2F3A]">
+                  {studs.brand}
+                </span>
+                <span className="px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-[#34D399] font-bold text-[10px]">
+                  {studs.surface}
+                </span>
+              </div>
+
+              <span className="px-2.5 py-1 rounded-xl text-xs font-black border bg-[#E5B80B] text-[#0F1115] border-[#E5B80B]">
+                {match.score}% MATCH
+              </span>
+            </div>
+
+            {/* Interactive View Switcher */}
+            <div className="flex justify-end gap-1.5 mb-2">
+              <button
+                type="button"
+                onClick={() => setViewMode('profile')}
+                className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all duration-150 cursor-pointer ${
+                  viewMode === 'profile'
+                    ? 'bg-[#E5B80B] text-[#0F1115] shadow-md font-black scale-105'
+                    : 'bg-[#1A1D24] text-[#A0A6B1] hover:text-[#F4F1EA] hover:bg-[#2A2F3A]'
+                }`}
+              >
+                👟 Cleat Profile
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('soleplate')}
+                className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all duration-150 cursor-pointer ${
+                  viewMode === 'soleplate'
+                    ? 'bg-[#E5B80B] text-[#0F1115] shadow-md font-black scale-105'
+                    : 'bg-[#1A1D24] text-[#A0A6B1] hover:text-[#F4F1EA] hover:bg-[#2A2F3A]'
+                }`}
+              >
+                ⚙️ Studs Soleplate
+              </button>
+            </div>
+
+            {/* Real Photographic Representation with 1-click instant toggle */}
+            <div
+              className="py-2 cursor-pointer"
+              onClick={() => setViewMode(v => v === 'profile' ? 'soleplate' : 'profile')}
+              title="Click image to toggle between cleat profile and studs view instantly"
+            >
+              <StudsProductPhoto item={studs} viewMode={viewMode} className="h-52" />
+            </div>
+
+            {/* Bottom Spec Badge */}
+            <div className="flex justify-between text-[11px] font-mono-num font-bold text-[#A0A6B1] bg-[#0F1115] px-3 py-1.5 rounded-xl border border-[#2A2F3A]">
+              <span>Studs: <strong className="text-[#F4F1EA]">{studs.studHeightMm}</strong></span>
+              <span>Turf Bite: <strong className="text-[#34D399]">{studs.studPenetration}/10</strong></span>
+            </div>
+          </div>
+
+          {/* Details Section */}
+          <div className="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-black text-[#E5B80B] uppercase tracking-wider">{studs.edition}</span>
+              <h3 className="text-base font-extrabold text-[#F4F1EA] mt-1 leading-snug">{studs.name}</h3>
+              
+              <div className="flex items-baseline gap-2 mt-2">
+                <span className="text-2xl font-black text-[#F4F1EA] font-mono-num">₹{studs.priceInr}</span>
+                <span className="text-[11px] text-[#34D399] font-bold">Free Shipping Across India</span>
+              </div>
+
+              {/* Studs Configuration Spec */}
+              <div className="mt-3 p-2.5 rounded-xl bg-[#14171E] border border-[#2A2F3A] text-xs font-mono-num">
+                <span className="text-[#E5B80B] text-[10px] block font-bold">Plate & Stud Setup:</span>
+                <span className="text-[#F4F1EA] text-[11px] font-medium">{studs.studType}</span>
+              </div>
+
+              {/* Size Selector */}
+              <div className="mt-3">
+                <span className="text-[10px] font-bold text-[#A0A6B1] block mb-1">Select UK / India Size:</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {studs.sizesAvailable.map(s => (
+                    <button
+                      key={s}
+                      onClick={() => setChosenSize(s)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-mono-num font-bold transition ${
+                        chosenSize === s 
+                          ? 'bg-[#E5B80B] text-[#0F1115]' 
+                          : 'bg-[#14171E] text-[#A0A6B1] hover:text-[#F4F1EA] border border-[#2A2F3A]'
+                      }`}
+                    >
+                      UK {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-2 mt-5 pt-3 border-t border-[#2A2F3A]">
+              <button
+                onClick={() => onAddToCart(chosenSize)}
+                className="py-2.5 px-3 rounded-xl bg-[#14171E] hover:bg-[#0F1115] text-[#F4F1EA] text-xs font-bold border border-[#2A2F3A] hover:border-[#E5B80B] transition"
+              >
+                Add to Cart
+              </button>
+              <button
+                onClick={() => onDirectBuy(chosenSize)}
+                className="py-2.5 px-3 rounded-xl bg-[#E5B80B] hover:bg-yellow-400 text-[#0F1115] text-xs font-black transition shadow-lg"
+              >
+                Direct Buy →
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ========================================================
+    // 7. CHECKOUT FLOW COMPONENT (INR ₹)
+    // ========================================================
+    function CheckoutFlow({ items, measurements, onBack, onComplete }) {
+      const [step, setStep] = useState('summary');
+      const [address, setAddress] = useState({
+        fullName: 'Rohit Sharma',
+        email: 'rohit.football@gmail.com',
+        phone: '+91 98765 43210',
+        street: 'Flat 402, Greenfield Sports Complex',
+        city: 'Mumbai',
+        postalCode: '400050'
+      });
+      const [paymentMethod, setPaymentMethod] = useState('upi');
+      const [card, setCard] = useState({ number: '4532 •••• •••• 8821', name: 'ROHIT SHARMA', exp: '08/28', cvv: '382' });
+
+      const subtotal = items.reduce((a, b) => a + b.priceInr * (b.quantity || 1), 0);
+
+      const handleConfirm = () => {
+        onComplete({
+          orderId: `ES-IND-${Math.floor(100000 + Math.random() * 900000)}`,
+          total: subtotal,
+          items,
+          address,
+          paymentMethod: paymentMethod === 'upi' ? 'UPI / GPay' : paymentMethod === 'card' ? 'Debit/Credit Card' : 'Cash on Delivery',
+          dispatchDate: 'Today, 2:30 PM',
+          expectedDelivery: 'In 2-3 Business Days'
+        });
+      };
+
+      return (
+        <div className="max-w-4xl mx-auto space-y-6 animate-fadeIn pb-12">
+          <div className="flex justify-between items-center">
+            <button onClick={onBack} className="text-xs font-bold text-[#E5B80B] hover:text-[#F4F1EA] px-3.5 py-2 rounded-xl bg-[#1A1D24] border border-[#2A2F3A]">
+              ← Return to Catalog
+            </button>
+            <h2 className="text-xl font-black text-[#F4F1EA]">Expecto Soleum Checkout</h2>
+          </div>
+
+          {/* Stepper Tabs */}
+          <div className="grid grid-cols-3 gap-2 text-xs font-bold">
+            {[
+              { id: 'summary', title: '1. Order Summary' },
+              { id: 'address', title: '2. Delivery Address' },
+              { id: 'payment', title: '3. Payment Method' }
+            ].map(s => (
+              <button
+                key={s.id}
+                onClick={() => setStep(s.id)}
+                className={`py-2 px-3 rounded-2xl border text-center font-bold uppercase transition ${
+                  step === s.id 
+                    ? 'bg-[#E5B80B] text-[#0F1115] border-[#E5B80B] shadow-lg' 
+                    : 'bg-[#1A1D24] border-[#2A2F3A] text-[#A0A6B1]'
+                }`}
+              >
+                {s.title}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div className="md:col-span-7 bg-[#1A1D24] border-2 border-[#2A2F3A] rounded-3xl p-6 shadow-xl space-y-4">
+              {step === 'summary' && (
+                <div className="space-y-4">
+                  <h3 className="text-sm font-black text-[#F4F1EA] uppercase">Selected Football Studs</h3>
+                  {items.map(item => (
+                    <div key={`${item.id}-${item.selectedSize}`} className="p-3.5 bg-[#14171E] border border-[#2A2F3A] rounded-2xl flex gap-3.5 items-center">
+                      <div className="w-16 h-16 bg-[#0F1115] rounded-xl flex items-center justify-center p-1 border border-[#2A2F3A] overflow-hidden">
+                        <img
+                          src={item.imageProfile}
+                          alt={item.name}
+                          onError={(e) => {
+                            if (item.fallbackProfile && e.target.src !== item.fallbackProfile) {
+                              e.target.src = item.fallbackProfile;
+                            }
+                          }}
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <span className="text-[10px] font-black text-[#E5B80B] uppercase">{item.brand} • {item.surface}</span>
+                        <h4 className="text-sm font-extrabold text-[#F4F1EA]">{item.name}</h4>
+                        <div className="flex justify-between items-center text-xs font-mono-num text-[#A0A6B1] mt-1">
+                          <span>Size: UK/IND {item.selectedSize}</span>
+                          <span className="text-[#E5B80B] font-black">₹{item.priceInr}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => setStep('address')}
+                    className="w-full py-3.5 bg-[#E5B80B] hover:bg-yellow-400 text-[#0F1115] font-black text-xs uppercase rounded-2xl transition shadow-xl"
+                  >
+                    Continue to Delivery Address →
+                  </button>
+                </div>
+              )}
+
+              {step === 'address' && (
+                <div className="space-y-3 text-xs font-bold text-[#F4F1EA]">
+                  <h3 className="text-sm font-black text-[#F4F1EA] uppercase">Delivery Address in India</h3>
+                  <div>
+                    <label className="text-[#A0A6B1] block mb-1">Full Name</label>
+                    <input
+                      type="text"
+                      value={address.fullName}
+                      onChange={e => setAddress({ ...address, fullName: e.target.value })}
+                      className="w-full bg-[#14171E] border border-[#2A2F3A] rounded-xl p-2.5 text-[#F4F1EA] focus:outline-none focus:border-[#E5B80B]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[#A0A6B1] block mb-1">Mobile Number (Delivery SMS)</label>
+                    <input
+                      type="text"
+                      value={address.phone}
+                      onChange={e => setAddress({ ...address, phone: e.target.value })}
+                      className="w-full bg-[#14171E] border border-[#2A2F3A] rounded-xl p-2.5 text-[#F4F1EA] focus:outline-none focus:border-[#E5B80B]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[#A0A6B1] block mb-1">House / Flat / Street</label>
+                    <input
+                      type="text"
+                      value={address.street}
+                      onChange={e => setAddress({ ...address, street: e.target.value })}
+                      className="w-full bg-[#14171E] border border-[#2A2F3A] rounded-xl p-2.5 text-[#F4F1EA] focus:outline-none focus:border-[#E5B80B]"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[#A0A6B1] block mb-1">City</label>
+                      <input
+                        type="text"
+                        value={address.city}
+                        onChange={e => setAddress({ ...address, city: e.target.value })}
+                        className="w-full bg-[#14171E] border border-[#2A2F3A] rounded-xl p-2.5 text-[#F4F1EA] focus:outline-none focus:border-[#E5B80B]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[#A0A6B1] block mb-1">PIN Code</label>
+                      <input
+                        type="text"
+                        value={address.postalCode}
+                        onChange={e => setAddress({ ...address, postalCode: e.target.value })}
+                        className="w-full bg-[#14171E] border border-[#2A2F3A] rounded-xl p-2.5 text-[#F4F1EA] focus:outline-none focus:border-[#E5B80B]"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setStep('payment')}
+                    className="w-full mt-3 py-3.5 bg-[#E5B80B] hover:bg-yellow-400 text-[#0F1115] font-black text-xs uppercase rounded-2xl transition shadow-xl"
+                  >
+                    Continue to Payment Method →
+                  </button>
+                </div>
+              )}
+
+              {step === 'payment' && (
+                <div className="space-y-4 text-xs font-bold text-[#F4F1EA]">
+                  <h3 className="text-sm font-black text-[#F4F1EA] uppercase">Choose Payment Option</h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { id: 'upi', name: 'UPI / GPay / Paytm', icon: '⚡' },
+                      { id: 'card', name: 'Debit / Credit Card', icon: '💳' },
+                      { id: 'cod', name: 'Cash on Delivery', icon: '💵' }
+                    ].map(pm => (
+                      <button
+                        key={pm.id}
+                        onClick={() => setPaymentMethod(pm.id)}
+                        className={`p-3 rounded-2xl border text-center font-bold uppercase transition ${
+                          paymentMethod === pm.id 
+                            ? 'bg-[#E5B80B] text-[#0F1115] border-[#E5B80B]' 
+                            : 'bg-[#14171E] border-[#2A2F3A] text-[#A0A6B1]'
+                        }`}
+                      >
+                        <span className="text-lg block mb-1">{pm.icon}</span>
+                        <span className="text-[10px]">{pm.name}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {paymentMethod === 'upi' && (
+                    <div className="p-4 bg-[#14171E] border border-[#34D399] rounded-2xl text-[#F4F1EA] space-y-2">
+                      <div className="flex justify-between font-bold">
+                        <span className="text-[#34D399]">Instant UPI Payment</span>
+                        <span className="text-[#A0A6B1]">₹0 Fee</span>
+                      </div>
+                      <p className="text-xs text-[#A0A6B1]">Support for Google Pay, PhonePe, Paytm, and all BHIM UPI apps.</p>
+                    </div>
+                  )}
+
+                  {paymentMethod === 'card' && (
+                    <div className="p-5 rounded-2xl bg-[#14171E] border border-[#E5B80B] font-mono-num text-white space-y-3 shadow-xl">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-bold text-[#E5B80B]">EXPECTO SOLEUM CARD</span>
+                        <span className="text-[10px] font-black text-[#34D399]">RUPAY / VISA</span>
+                      </div>
+                      <div className="text-lg font-bold tracking-widest text-[#F4F1EA]">{card.number}</div>
+                      <div className="flex justify-between text-[10px] text-[#A0A6B1]">
+                        <span>{card.name}</span>
+                        <span>{card.exp}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {paymentMethod === 'cod' && (
+                    <div className="p-4 bg-[#14171E] border border-[#2A2F3A] rounded-2xl text-[#F4F1EA]">
+                      <p className="font-bold text-[#E5B80B]">Cash on Delivery Available</p>
+                      <p className="text-xs text-[#A0A6B1] mt-0.5">Pay in cash or UPI when your studs arrive at your doorstep.</p>
+                    </div>
+                  )}
+
+                  {/* ZERO MONEY DEDUCTION NOTICE */}
+                  <div className="p-3.5 bg-[#1B4D3E]/30 border border-[#34D399]/50 rounded-2xl flex items-center gap-3">
+                    <span className="text-2xl flex-shrink-0">🛡️</span>
+                    <div>
+                      <span className="text-[11px] font-bold text-[#34D399] uppercase tracking-wider block">
+                        Dummy Website • No Deduction of Money
+                      </span>
+                      <span className="text-[10px] text-[#A0A6B1] block leading-snug mt-0.5">
+                        This is a simulated demo store. <strong>Zero money will be deducted</strong> from your bank account, UPI, or card. Test any payment method freely.
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleConfirm}
+                    className="w-full py-4 bg-[#E5B80B] hover:bg-yellow-400 text-[#0F1115] font-black text-sm uppercase rounded-2xl transition shadow-xl cursor-pointer"
+                  >
+                    Confirm & Place Order (₹{subtotal.toLocaleString('en-IN')})
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Right Column: Pricing Breakdown */}
+            <div className="md:col-span-5 bg-[#1A1D24] border-2 border-[#2A2F3A] rounded-3xl p-6 shadow-xl space-y-4 font-mono-num text-xs">
+              <h4 className="text-sm font-bold text-[#E5B80B] uppercase border-b border-[#2A2F3A] pb-2">
+                Order Total
+              </h4>
+              <div className="flex justify-between text-[#A0A6B1]">
+                <span>Studs Subtotal</span>
+                <span className="text-[#F4F1EA]">₹{subtotal.toLocaleString('en-IN')}</span>
+              </div>
+              <div className="flex justify-between text-[#A0A6B1]">
+                <span>Express Sports Courier</span>
+                <span className="text-[#34D399] font-bold">FREE (₹0)</span>
+              </div>
+              <div className="flex justify-between text-[#A0A6B1]">
+                <span>Extra Stud Laces</span>
+                <span className="text-[#E5B80B] font-bold">INCLUDED</span>
+              </div>
+              <div className="flex justify-between text-[#A0A6B1]">
+                <span>Anti-Blister Pitch Guarantee</span>
+                <span className="text-[#34D399]">30 DAYS</span>
+              </div>
+              <div className="pt-3 border-t border-[#2A2F3A] flex justify-between items-baseline text-white">
+                <span className="text-sm font-sans font-black text-[#E5B80B]">Total Due</span>
+                <span className="text-2xl font-black text-[#F4F1EA] font-mono-num">₹{subtotal.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ========================================================
+    // 8. DEDICATED BOOKING STATUS & ORDER TRACKING PAGE
+    // ========================================================
+    function BookingStatusPage({ order, measurements, onRestart, onBackToCatalog }) {
+      return (
+        <div className="max-w-3xl mx-auto py-8 px-4 animate-fadeIn space-y-6">
+          {/* Header Card */}
+          <div className="bg-[#1A1D24] border-2 border-[#2A2F3A] rounded-3xl p-6 lg:p-8 shadow-2xl text-center relative overflow-hidden">
+            <div className="w-16 h-16 rounded-2xl bg-[#1B4D3E] text-[#34D399] flex items-center justify-center text-3xl font-black mx-auto mb-3 shadow-lg border border-[#34D399]/40">
+              ✓
+            </div>
+            <span className="text-xs text-[#34D399] uppercase font-bold tracking-widest bg-[#1B4D3E]/30 px-3 py-1 rounded-full border border-[#34D399]/30">
+              Booking Confirmed & Dispatched
+            </span>
+            <div className="mt-2.5 inline-flex items-center gap-2 bg-[#1B4D3E]/40 border border-[#34D399]/50 px-3.5 py-1 rounded-full text-xs text-[#34D399] font-medium">
+              <span>🛡️</span>
+              <span><strong>Dummy Order Simulation:</strong> No money deduction was made. ₹0 charged.</span>
+            </div>
+            <h2 className="text-2xl lg:text-3xl font-black text-[#F4F1EA] mt-2">
+              Football Studs Order Tracking
+            </h2>
+            <p className="text-xs text-[#A0A6B1] font-mono-num mt-1">
+              Tracking ID: <strong className="text-[#E5B80B]">{order.orderId}</strong> • Expected: <strong className="text-[#34D399]">{order.expectedDelivery}</strong>
+            </p>
+
+            {/* LIVE STEP TIMELINE */}
+            <div className="mt-8 pt-6 border-t border-[#2A2F3A] text-left">
+              <span className="text-[11px] font-bold text-[#E5B80B] uppercase tracking-wider block mb-4">
+                Dispatch Status Timeline
+              </span>
+              <div className="space-y-4">
+                {[
+                  { step: '1', title: 'Order Confirmed & Biometrics Verified', time: 'Today, 2:15 PM', status: 'done', desc: 'Foot Length (27.2cm) and Width (10.4cm) calibrated with soleplate last.' },
+                  { step: '2', title: 'Studs Quality Checked & Torque Tested', time: 'Today, 2:45 PM', status: 'done', desc: 'All 14 TPU studs inspected for hardness and zero sole separation.' },
+                  { step: '3', title: 'Dispatched via Sports Courier (Blue Dart)', time: 'Today, 3:30 PM', status: 'current', desc: 'Air Waybill #BD9821482IN — In transit to sorting hub.' },
+                  { step: '4', title: 'Out for Pitch Delivery', time: 'Estimated in 48 hrs', status: 'pending', desc: 'Courier agent will contact via SMS prior to doorstep delivery.' }
+                ].map((s, idx) => (
+                  <div key={s.step} className="flex items-start gap-3.5">
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0 ${
+                      s.status === 'done'
+                        ? 'bg-[#1B4D3E] text-[#34D399] border border-[#34D399]'
+                        : s.status === 'current'
+                        ? 'bg-[#E5B80B] text-[#0F1115] font-black animate-pulse'
+                        : 'bg-[#14171E] text-[#A0A6B1] border border-[#2A2F3A]'
+                    }`}>
+                      {s.status === 'done' ? '✓' : s.step}
+                    </div>
+                    <div className="flex-1 pb-3 border-b border-[#2A2F3A]/60">
+                      <div className="flex justify-between items-baseline">
+                        <h4 className={`text-xs font-bold ${s.status === 'current' ? 'text-[#E5B80B]' : 'text-[#F4F1EA]'}`}>
+                          {s.title}
+                        </h4>
+                        <span className="text-[10px] font-mono-num text-[#A0A6B1]">{s.time}</span>
+                      </div>
+                      <p className="text-[11px] text-[#A0A6B1] mt-0.5">{s.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Booked Item Summary Box */}
+            <div className="mt-6 p-4 rounded-2xl bg-[#14171E] border border-[#2A2F3A] text-left text-xs font-mono-num space-y-3">
+              <div className="flex justify-between border-b border-[#2A2F3A] pb-2">
+                <span className="text-[#A0A6B1]">Item Booked:</span>
+                <span className="text-[#F4F1EA] font-bold">{order.items[0]?.name || 'Nivia Ashtang Studs'}</span>
+              </div>
+              <div className="flex justify-between border-b border-[#2A2F3A] pb-2">
+                <span className="text-[#A0A6B1]">Selected Size:</span>
+                <span className="text-[#E5B80B] font-bold">UK / IND {order.items[0]?.selectedSize || 8}</span>
+              </div>
+              <div className="flex justify-between border-b border-[#2A2F3A] pb-2">
+                <span className="text-[#A0A6B1]">Destination Address:</span>
+                <span className="text-[#F4F1EA] font-bold">{order.address.fullName}, {order.address.city} (PIN: {order.address.postalCode})</span>
+              </div>
+              <div className="flex justify-between border-b border-[#2A2F3A] pb-2">
+                <span className="text-[#A0A6B1]">Payment Method:</span>
+                <span className="text-[#34D399] font-bold">{order.paymentMethod}</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="text-[#A0A6B1]">Amount Paid:</span>
+                <span className="text-base font-black text-[#E5B80B]">₹{order.total.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => window.print()}
+                className="px-6 py-3 rounded-2xl bg-[#14171E] hover:bg-[#0F1115] text-[#F4F1EA] text-xs font-bold border border-[#2A2F3A] hover:border-[#E5B80B] transition"
+              >
+                🖨️ Print Booking Invoice
+              </button>
+              <button
+                onClick={onRestart}
+                className="px-6 py-3 rounded-2xl bg-[#E5B80B] hover:bg-yellow-400 text-[#0F1115] text-xs font-black uppercase tracking-wider transition shadow-lg"
+              >
+                Scan Another Foot / New Booking
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    try {
+      const rootElement = document.getElementById('root');
+      if (ReactDOM.createRoot) {
+        ReactDOM.createRoot(rootElement).render(
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
+        );
+      } else {
+        ReactDOM.render(
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>,
+          rootElement
+        );
+      }
+    } catch (err) {
+      console.error("Mount error:", err);
+    }
+  </script>
+</body>
+</html>
