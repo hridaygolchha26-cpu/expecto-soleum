@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar';
 import { Foot3DViewer } from './components/Foot3DViewer';
 import { MeasurementForm } from './components/MeasurementForm';
 import { ShoeCatalog } from './components/ShoeCatalog';
+console.log("APP FILE LOADED");
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutView } from './components/CheckoutView';
 import { OrderConfirmation } from './components/OrderConfirmation';
