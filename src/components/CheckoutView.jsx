@@ -10,20 +10,7 @@ export const CheckoutView = ({
 }) => {
   const [activeStep, setActiveStep] = useState('summary'); // 'summary' | 'address' | 'payment'
 
-  // Shipping Form State
-  const [address, setAddress] = useState({
-    fullName: 'David Silva',
-    email: 'david.silva@footballmail.com',
-    phone: '+44 7911 123456',
-    street: '10 Wembley Way',
-    apartment: 'Apt 4B',
-    city: 'London',
-    postalCode: 'HA9 0WS',
-    country: 'United Kingdom'
-  });
 
-  // Payment Form State
-  
   const [promoCode, setPromoCode] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
   const [promoMessage, setPromoMessage] = useState('');
@@ -57,7 +44,6 @@ export const CheckoutView = ({
       await onCompleteOrder({
         items,
         total: finalTotal,
-        address,
         paymentMethod: 'Demo — no payment collected',
         orderId: `ES-${Math.floor(100000 + Math.random() * 900000)}`,
         date: new Date().toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -87,7 +73,7 @@ export const CheckoutView = ({
           <span className="text-[10px] font-mono uppercase text-sky-400 tracking-wider">
             DEMO CHECKOUT
           </span>
-          <h2 className="text-xl font-bold text-white">Expecto Soleum Dispatch</h2>
+          <h2 className="text-xl font-bold text-white">Expecto Soleum Demo</h2>
         </div>
       </div>
 
@@ -95,7 +81,7 @@ export const CheckoutView = ({
       <div className="grid grid-cols-3 gap-3">
         {[
           { id: 'summary', step: '1', title: 'Order Summary' },
-          { id: 'address', step: '2', title: 'Shipping Address' },
+          { id: 'address', step: '2', title: 'Demo Details' },
           { id: 'payment', step: '3', title: 'Demo Confirmation' }
         ].map((s) => (
           <button
@@ -174,20 +160,13 @@ export const CheckoutView = ({
                 ))}
               </div>
 
-              {/* Complimentary Player Kit Perks */}
-              <div className="p-3 bg-gradient-to-r from-blue-950/40 to-slate-900 border border-blue-900/40 rounded-xl flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <span className="text-base">🎁</span>
-                  <span>Free Expecto Soleum Breathable Boot Bag & Match Laces</span>
-                </div>
-                <span className="font-mono text-emerald-400 font-bold">{formatINR(0)}</span>
-              </div>
+              <p className="text-[11px] text-slate-500">Prototype catalogue pricing is illustrative and does not represent a live offer.</p>
 
               <button
                 onClick={() => setActiveStep('address')}
                 className="w-full py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
               >
-                <span>Continue to Shipping Address</span>
+                <span>Continue to Demo Details</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -195,98 +174,26 @@ export const CheckoutView = ({
             </div>
           )}
 
-          {/* STEP 2: SHIPPING ADDRESS */}
+          {/* STEP 2: DEMO DETAILS */}
           {activeStep === 'address' && (
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4 animate-fadeIn">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-sky-400" />
-                  Delivery & Shipping Address
-                </h3>
-                <span className="text-xs font-mono text-emerald-400">Matchday Express</span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div className="bg-slate-900/90 border border-amber-500/40 rounded-2xl p-6 shadow-xl space-y-4 animate-fadeIn">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🧪</span>
                 <div>
-                  <label className="text-slate-400 font-mono block mb-1">Full Player Name</label>
-                  <input
-                    type="text"
-                    value={address.fullName}
-                    onChange={(e) => setAddress({ ...address, fullName: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 font-mono block mb-1">Email for Tracking Updates</label>
-                  <input
-                    type="email"
-                    value={address.email}
-                    onChange={(e) => setAddress({ ...address, email: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 font-mono block mb-1">Phone Number (Courier SMS)</label>
-                  <input
-                    type="tel"
-                    value={address.phone}
-                    onChange={(e) => setAddress({ ...address, phone: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 font-mono block mb-1">Country</label>
-                  <input
-                    type="text"
-                    value={address.country}
-                    onChange={(e) => setAddress({ ...address, country: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 font-medium"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="text-slate-400 font-mono block mb-1">Street Address</label>
-                  <input
-                    type="text"
-                    value={address.street}
-                    onChange={(e) => setAddress({ ...address, street: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 font-mono block mb-1">City</label>
-                  <input
-                    type="text"
-                    value={address.city}
-                    onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 font-mono block mb-1">Postal / Zip Code</label>
-                  <input
-                    type="text"
-                    value={address.postalCode}
-                    onChange={(e) => setAddress({ ...address, postalCode: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 font-medium"
-                  />
+                  <h3 className="text-base font-bold text-white">Demo order details</h3>
+                  <p className="text-xs text-amber-300">No personal or delivery information is required.</p>
                 </div>
               </div>
-
+              <div className="rounded-xl border border-amber-500/30 bg-amber-950/20 p-4 text-sm text-slate-200 space-y-2">
+                <p className="font-bold text-amber-200">This is a simulated checkout.</p>
+                <p>Expecto Soleum is currently a prototype. No products are sold or dispatched, and no shipping address, phone number or payment details should be entered.</p>
+                <p className="text-xs text-slate-400">You can continue to create a demo order reference, which is saved to your signed-in account.</p>
+              </div>
               <div className="pt-3 flex gap-3">
-                <button
-                  onClick={() => setActiveStep('summary')}
-                  className="w-1/3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={() => setActiveStep('payment')}
-                  className="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
-                >
+                <button onClick={() => setActiveStep('summary')} className="w-1/3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">Back</button>
+                <button onClick={() => setActiveStep('payment')} className="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2">
                   <span>Continue to Demo Confirmation</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                 </button>
               </div>
             </div>
@@ -344,17 +251,17 @@ export const CheckoutView = ({
               )}
 
               <div className="flex justify-between text-slate-300">
-                <span>Matchday Courier Delivery</span>
-                <span className="text-emerald-400 font-bold">FREE</span>
+                <span>Delivery</span>
+                <span className="text-amber-300 font-bold">Not available in demo</span>
               </div>
 
               <div className="flex justify-between text-slate-300">
-                <span>Expecto Soleum Precision Fit Guarantee</span>
-                <span className="text-sky-400">INCLUDED</span>
+                <span>Fit recommendation</span>
+                <span className="text-sky-400">Estimate only</span>
               </div>
 
               <div className="pt-3 border-t border-slate-800 flex justify-between items-baseline text-white">
-                <span className="text-sm font-sans font-bold">Total Due</span>
+                <span className="text-sm font-sans font-bold">Estimated demo value</span>
                 <span className="text-2xl font-black text-sky-400 font-mono">
                   {formatINR(finalTotal)}
                 </span>
@@ -387,16 +294,7 @@ export const CheckoutView = ({
               )}
             </form>
 
-            {/* Fit Assurance Guarantee */}
-            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400 space-y-1.5">
-              <div className="flex items-center gap-1.5 font-bold text-slate-200">
-                <span>🛡️</span>
-                <span>30-Day Pitch Trial Guarantee</span>
-              </div>
-              <p>
-                Take them out on grass for 30 days. If the width or length causes blistering or pinch points, exchange for another tailored boot free of charge.
-              </p>
-            </div>
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400">Fit scores are estimates based on the catalogue data currently configured. Always check a boot's fit with its manufacturer or retailer before purchasing.</div>
           </div>
         </div>
       </div>
