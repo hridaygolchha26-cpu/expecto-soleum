@@ -130,7 +130,7 @@ export const CartDrawer = ({ isOpen, onClose, cart, onUpdateQuantity, onRemoveIt
               </div>
               <div className="flex justify-between text-base font-bold pt-2 border-t border-slate-800 text-white">
                 <span>Total</span>
-                <span className="text-sky-400 font-mono">${subtotal.toFixed(2)}</span>
+                <span className="text-sky-400 font-mono">{formatINR(subtotal)}</span>
               </div>
             </div>
 
