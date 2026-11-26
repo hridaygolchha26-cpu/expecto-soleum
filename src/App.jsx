@@ -230,16 +230,16 @@ export function App() {
             <div className="text-center max-w-3xl mx-auto pt-2 pb-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-950/80 border border-sky-800/60 text-sky-400 text-xs font-mono font-medium mb-3">
                 <span>⚡</span>
-                <span>ELIMINATE BLISTERS & TOE CROWDING IN FOOTBALL BOOTS</span>
+                <span>FIND BOOTS THAT MAY BETTER MATCH YOUR FOOT WIDTH</span>
               </div>
               <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
                 Expecto Soleum. <br />
                 <span className="bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                  Precision Boot Fit By 3D Biometrics.
+                  Football Boot Fit, Guided by Your Measurements.
                 </span>
               </h1>
               <p className="text-sm text-slate-400 mt-3 leading-relaxed">
-                Football boots are built on radically different lasts. Rotate the 3D foot model below, dial in your exact heel-to-toe length and metatarsal width, and our matching algorithm will filter boots designed specifically for your anatomical foot shape.
+                Football boots can fit differently across brands and models. Enter your foot length and forefoot width, then compare them with the width information configured in our demo catalogue. Results are estimates to help guide your research, not a guarantee of fit.
               </p>
             </div>
 
