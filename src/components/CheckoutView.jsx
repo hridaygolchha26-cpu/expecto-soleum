@@ -309,6 +309,8 @@ export const CheckoutView = ({
               </div>
             </div>
           )}
+        </div>
+
         {/* Right Column: Sticky Summary & Promo Code (5 cols) */}
         <div className="lg:col-span-5 space-y-5">
           <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5 sticky top-24">
