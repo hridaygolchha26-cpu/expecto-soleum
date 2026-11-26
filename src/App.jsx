@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Navbar } from './components/Navbar';
-import { Foot3DViewer } from './components/Foot3DViewer';
+const Foot3DViewer = lazy(() => import('./components/Foot3DViewer').then((module) => ({ default: module.Foot3DViewer })));
 import { MeasurementForm } from './components/MeasurementForm';
 import { ShoeCatalog } from './components/ShoeCatalog';
 import { CartDrawer } from './components/CartDrawer';
@@ -248,11 +248,13 @@ export function App() {
               {/* Left Column: 3D Foot Viewer (7 cols) */}
               <div className="lg:col-span-7">
                 {!isAuthModalOpen && !isAccountPanelOpen && (
-                  <Foot3DViewer
-                    lengthCm={measurements.lengthCm}
-                    widthCm={measurements.widthCm}
-                    archType={measurements.archType}
-                  />
+                  <Suspense fallback={<div className="min-h-[320px] rounded-2xl border border-slate-800 bg-slate-900/60 flex items-center justify-center text-sm text-slate-400">Loading 3D foot model…</div>}>
+                    <Foot3DViewer
+                      lengthCm={measurements.lengthCm}
+                      widthCm={measurements.widthCm}
+                      archType={measurements.archType}
+                    />
+                  </Suspense>
                 )}
               </div>
 
