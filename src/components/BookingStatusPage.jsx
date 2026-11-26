@@ -33,7 +33,7 @@ export const BookingStatusPage = ({ order, measurements, onRestart, onBackToCata
           {order?.address?.city && <p className="text-xs text-slate-500 border-t border-slate-800 pt-3">Demo destination entered: {order.address.city}, {order.address.country}</p>}
           {measurements && <p className="text-xs text-slate-500">Fit profile used: {measurements.lengthCm} cm length × {measurements.widthCm} cm width</p>}
         </div>
-        <p className="text-xs text-slate-500 text-center">This reference currently exists only in this browser session. Persistent account order history is not connected yet.</p>
+        <p className="text-xs text-slate-500 text-center">{order?.id ? 'This demo order is saved to your signed-in account. Find it under My Account → Demo order history.' : 'This demo reference is temporary and is not saved to an account.'}</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button onClick={onBackToCatalog} className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold">Back to boot catalogue</button>
           <button onClick={onRestart} className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black">Start another fit</button>
