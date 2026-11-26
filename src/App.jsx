@@ -288,6 +288,7 @@ export function App() {
           <CheckoutView
             items={checkoutItems.length > 0 ? checkoutItems : cart}
             userMeasurements={measurements}
+            userId={user?.id || null}
             onBack={() => setCurrentStep('catalog')}
             onCompleteOrder={handleCompleteOrder}
           />
