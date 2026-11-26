@@ -7,8 +7,16 @@ console.log("APP FILE LOADED");
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutView } from './components/CheckoutView';
 import { OrderConfirmation } from './components/OrderConfirmation';
+import { useAuth } from './auth/AuthProvider';
+import { AuthModal } from './components/AuthModal';
+import { AccountPanel } from './components/AccountPanel';
+import { ResetPasswordView } from './components/ResetPasswordView';
+import { listFavourites, toggleFavourite } from './lib/favourites';
+import { listMeasurements } from './lib/measurements';
+import { calculateSizesFromLength } from './utils/fitCalculator';
 
 export function App() {
+  const { user } = useAuth();
   // Navigation / Step state: 'measure' | 'catalog' | 'checkout' | 'confirmation'
   const [currentStep, setCurrentStep] = useState('measure');
 
@@ -38,6 +46,9 @@ export function App() {
   const [checkoutItems, setCheckoutItems] = useState([]);
   const [lastOrder, setLastOrder] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAccountPanelOpen, setIsAccountPanelOpen] = useState(false);
+  const [favouriteIds, setFavouriteIds] = useState([]);
 
   useEffect(() => {
     try {
@@ -54,6 +65,46 @@ export function App() {
       return () => clearTimeout(timer);
     }
   }, [toastMessage]);
+
+  useEffect(() => {
+    let active = true;
+    if (!user) { setFavouriteIds([]); return () => { active = false; }; }
+    Promise.all([listFavourites(user.id), listMeasurements(user.id)]).then(([favourites, saved]) => {
+      if (!active) return;
+      setFavouriteIds(favourites.map((item) => item.shoe_id));
+      const preferred = saved.find((item) => item.is_default);
+      if (preferred) {
+        const lengthCm = Number(preferred.foot_length_mm) / 10;
+        const widthCm = Number(preferred.foot_width_mm) / 10;
+        const sizes = calculateSizesFromLength(lengthCm);
+        setMeasurements((current) => ({ ...current, lengthCm, widthCm, sizeEU: sizes.eu, sizeUK: sizes.uk, sizeUS: sizes.usMen, sizeUnit: preferred.size_system || 'EU' }));
+      }
+    }).catch((error) => console.error('Could not load account preferences:', error));
+    return () => { active = false; };
+  }, [user && user.id]);
+
+  const handleToggleFavourite = async (shoeId) => {
+    if (!user) { setIsAuthModalOpen(true); return; }
+    const wasFavourite = favouriteIds.includes(shoeId);
+    setFavouriteIds((current) => wasFavourite ? current.filter((id) => id !== shoeId) : [...current, shoeId]);
+    try {
+      await toggleFavourite(user.id, shoeId, wasFavourite);
+      showToast(wasFavourite ? 'Removed from favourites.' : 'Added to favourites.');
+    } catch (error) {
+      setFavouriteIds((current) => wasFavourite ? [...current, shoeId] : current.filter((id) => id !== shoeId));
+      showToast(error.message || 'Could not update favourites.');
+    }
+  };
+
+  const handleUseMeasurement = (saved) => {
+    const lengthCm = Number(saved.foot_length_mm) / 10;
+    const widthCm = Number(saved.foot_width_mm) / 10;
+    const sizes = calculateSizesFromLength(lengthCm);
+    setMeasurements((current) => ({ ...current, lengthCm, widthCm, sizeEU: sizes.eu, sizeUK: sizes.uk, sizeUS: sizes.usMen, sizeUnit: saved.size_system || 'EU' }));
+    setIsAccountPanelOpen(false);
+    setCurrentStep('measure');
+    showToast('Loaded "' + saved.name + '" measurements.');
+  };
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -121,6 +172,8 @@ export function App() {
 
   const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
+  if (window.location.pathname === '/reset-password') return <ResetPasswordView />;
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-sky-500 selection:text-white">
       {/* Top Navbar */}
@@ -140,6 +193,9 @@ export function App() {
         }}
         cartCount={totalCartCount}
         onOpenCart={() => setIsCartOpen(true)}
+        user={user}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenAccount={() => setIsAccountPanelOpen(true)}
       />
 
       {/* Toast Notification */}
@@ -218,6 +274,10 @@ export function App() {
             onAddToCart={handleAddToCart}
             onBuyNow={handleBuyNow}
             onBackToMeasurement={() => setCurrentStep('measure')}
+            userId={user ? user.id : null}
+            favouriteIds={favouriteIds}
+            onToggleFavourite={handleToggleFavourite}
+            onRequestAuth={() => setIsAuthModalOpen(true)}
           />
         )}
 
@@ -254,6 +314,8 @@ export function App() {
           </div>
         </div>
       </footer>
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <AccountPanel isOpen={isAccountPanelOpen} user={user} onClose={() => setIsAccountPanelOpen(false)} onUseMeasurement={handleUseMeasurement} />
     </div>
   );
 }
