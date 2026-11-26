@@ -5,7 +5,8 @@ export const CheckoutView = ({
   items,
   userMeasurements,
   onBack,
-  onCompleteOrder
+  onCompleteOrder,
+  userId
 }) => {
   const [activeStep, setActiveStep] = useState('summary'); // 'summary' | 'address' | 'payment'
 
@@ -27,6 +28,7 @@ export const CheckoutView = ({
   const [discountPercent, setDiscountPercent] = useState(0);
   const [promoMessage, setPromoMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderError, setOrderError] = useState('');
 
   // Calculations
   const subtotal = items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
@@ -44,19 +46,27 @@ export const CheckoutView = ({
     }
   };
 
-  const handleSubmitOrder = () => {
+  const handleSubmitOrder = async () => {
+    if (!userId) {
+      setOrderError('Sign in first to save this demo order to My Account. No payment details are needed.');
+      return;
+    }
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      onCompleteOrder({
+    setOrderError('');
+    try {
+      await onCompleteOrder({
         items,
         total: finalTotal,
         address,
         paymentMethod: 'Demo — no payment collected',
         orderId: `ES-${Math.floor(100000 + Math.random() * 900000)}`,
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        date: new Date().toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })
       });
-    }, 1200);
+    } catch (error) {
+      setOrderError(error?.message || 'Could not save the demo order. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -301,6 +311,7 @@ export const CheckoutView = ({
                 <span className="text-slate-400">Demo order value</span>
                 <strong className="text-white">{formatINR(finalTotal)}</strong>
               </div>
+              {orderError && <p role="alert" className="text-sm text-rose-300 bg-rose-950/40 border border-rose-900 rounded-xl p-3">{orderError}</p>}
               <div className="pt-2 flex gap-3">
                 <button onClick={() => setActiveStep('address')} className="w-1/3 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">Back</button>
                 <button onClick={handleSubmitOrder} disabled={isSubmitting} className="flex-1 py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 font-bold text-slate-950 text-sm shadow-xl transition-all">
