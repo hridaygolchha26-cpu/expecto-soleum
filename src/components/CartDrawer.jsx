@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatINR } from '../utils/currency';
 
 export const CartDrawer = ({ isOpen, onClose, cart, onUpdateQuantity, onRemoveItem, onProceedToCheckout }) => {
   if (!isOpen) return null;
@@ -81,7 +82,7 @@ export const CartDrawer = ({ isOpen, onClose, cart, onUpdateQuantity, onRemoveIt
                       Size: EU {item.selectedSize}
                     </span>
                     <span className="text-xs font-bold text-white font-mono">
-                      ${item.price}
+                      {formatINR(item.price)}
                     </span>
                   </div>
 
@@ -117,7 +118,7 @@ export const CartDrawer = ({ isOpen, onClose, cart, onUpdateQuantity, onRemoveIt
             <div className="space-y-2 mb-4 text-xs font-mono">
               <div className="flex justify-between text-slate-400">
                 <span>Subtotal</span>
-                <span className="text-white">${subtotal.toFixed(2)}</span>
+                <span className="text-white">{formatINR(subtotal)}</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Matchday Courier</span>
