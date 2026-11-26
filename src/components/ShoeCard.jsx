@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { calculateBootMatch } from '../utils/fitCalculator';
 
-export const ShoeCard = ({ boot, userMeasurements, onAddToCart, onBuyNow }) => {
+export const ShoeCard = ({ boot, userMeasurements, onAddToCart, onBuyNow, isFavourite = false, onToggleFavourite, onRequestAuth }) => {
   const [selectedSize, setSelectedSize] = useState(userMeasurements.sizeEU || 42.5);
   const [isHovered, setIsHovered] = useState(false);
   const [viewMode, setViewMode] = useState('profile');
@@ -26,6 +26,7 @@ export const ShoeCard = ({ boot, userMeasurements, onAddToCart, onBuyNow }) => {
       onMouseLeave={() => setIsHovered(false)}
       className="group relative bg-slate-900/90 border border-slate-800 hover:border-sky-500/50 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-sky-500/10 flex flex-col justify-between"
     >
+      <button type="button" aria-label={isFavourite?'Remove from favourites':'Add to favourites'} title={isFavourite?'Remove from favourites':'Add to favourites'} onClick={(event)=>{event.stopPropagation();if(onToggleFavourite)onToggleFavourite(boot.id);else if(onRequestAuth)onRequestAuth();}} className={`absolute top-14 right-3 z-40 w-10 h-10 rounded-full border shadow-xl flex items-center justify-center transition-all ${isFavourite?'bg-rose-500/20 border-rose-400 text-rose-300':'bg-slate-950/90 border-slate-700 text-slate-200 hover:text-rose-300 hover:border-rose-400'}`}><svg className="w-5 h-5" viewBox="0 0 24 24" fill={isFavourite?'currentColor':'none'} stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg></button>
       {/* Top Media & Image Section */}
       <div className="relative h-56 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 flex items-center justify-center overflow-hidden">
         {/* Background Radial Glow */}
