@@ -22,14 +22,7 @@ export const CheckoutView = ({
   });
 
   // Payment Form State
-  const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'applepay' | 'paypal' | 'klarna'
-  const [cardData, setCardData] = useState({
-    cardNumber: '4532 •••• •••• 8821',
-    cardHolder: 'DAVID SILVA',
-    expiry: '08/28',
-    cvv: '382'
-  });
-
+  
   const [promoCode, setPromoCode] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
   const [promoMessage, setPromoMessage] = useState('');
@@ -59,7 +52,7 @@ export const CheckoutView = ({
         items,
         total: finalTotal,
         address,
-        paymentMethod,
+        paymentMethod: 'Demo — no payment collected',
         orderId: `ES-${Math.floor(100000 + Math.random() * 900000)}`,
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
       });
@@ -82,7 +75,7 @@ export const CheckoutView = ({
 
         <div className="text-right">
           <span className="text-[10px] font-mono uppercase text-sky-400 tracking-wider">
-            Secured Checkout
+            DEMO CHECKOUT
           </span>
           <h2 className="text-xl font-bold text-white">Expecto Soleum Dispatch</h2>
         </div>
@@ -93,7 +86,7 @@ export const CheckoutView = ({
         {[
           { id: 'summary', step: '1', title: 'Order Summary' },
           { id: 'address', step: '2', title: 'Shipping Address' },
-          { id: 'payment', step: '3', title: 'Payment Method' }
+          { id: 'payment', step: '3', title: 'Demo Confirmation' }
         ].map((s) => (
           <button
             key={s.id}
@@ -280,7 +273,7 @@ export const CheckoutView = ({
                   onClick={() => setActiveStep('payment')}
                   className="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
                 >
-                  <span>Continue to Payment Method</span>
+                  <span>Continue to Demo Confirmation</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -289,172 +282,38 @@ export const CheckoutView = ({
             </div>
           )}
 
-          {/* STEP 3: PAYMENT METHOD */}
+          {/* STEP 3: DEMO ORDER CONFIRMATION */}
           {activeStep === 'payment' && (
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6 animate-fadeIn">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-sky-400" />
-                  Choose Payment Method
-                </h3>
-                <span className="text-xs font-mono text-slate-400">256-Bit SSL Encrypted</span>
+            <div className="bg-slate-900/90 border border-amber-500/40 rounded-2xl p-6 shadow-xl space-y-5 animate-fadeIn">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🧪</span>
+                <div>
+                  <h3 className="text-base font-bold text-white">Demo checkout</h3>
+                  <p className="text-xs text-amber-300">This is a product demonstration, not a live store.</p>
+                </div>
               </div>
-
-              {/* Payment Method Selector Tabs */}
-              <div className="grid grid-cols-4 gap-2">
-                {[
-                  { id: 'card', name: 'Credit Card', icon: '💳' },
-                  { id: 'applepay', name: 'Apple Pay', icon: '🍎' },
-                  { id: 'paypal', name: 'PayPal', icon: '🅿️' },
-                  { id: 'klarna', name: 'Klarna 4x', icon: '⚡' }
-                ].map((pm) => (
-                  <button
-                    key={pm.id}
-                    onClick={() => setPaymentMethod(pm.id)}
-                    className={`p-3 rounded-xl border text-center transition-all flex flex-col items-center gap-1 ${
-                      paymentMethod === pm.id
-                        ? 'bg-sky-950/80 border-sky-500 text-white shadow-md'
-                        : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <span className="text-lg">{pm.icon}</span>
-                    <span className="text-[11px] font-bold">{pm.name}</span>
-                  </button>
-                ))}
+              <div className="rounded-xl border border-amber-500/30 bg-amber-950/20 p-4 text-sm text-slate-200 space-y-2">
+                <p className="font-bold text-amber-200">No payment will be taken.</p>
+                <p>No card details, CVV, wallet credentials or real payment information are needed. This button only creates a simulated order reference inside the demo.</p>
+                <p className="text-xs text-slate-400">The displayed total is an estimated product value, not an amount charged. No real courier dispatch or delivery is arranged.</p>
               </div>
-
-              {/* Interactive Card Form */}
-              {paymentMethod === 'card' && (
-                <div className="space-y-4 animate-fadeIn">
-                  {/* Visual Mock Credit Card */}
-                  <div className="p-5 rounded-2xl bg-gradient-to-tr from-sky-900 via-blue-950 to-slate-900 border border-sky-500/30 text-white font-mono shadow-2xl relative overflow-hidden">
-                    <div className="absolute right-0 bottom-0 translate-x-4 translate-y-4 w-32 h-32 rounded-full bg-sky-500/10 blur-xl" />
-                    <div className="flex justify-between items-center mb-6">
-                      <span className="text-xs font-bold text-sky-400 tracking-wider">EXPECTO SOLEUM PRO CARD</span>
-                      <span className="text-xs font-black">VISA ELITE</span>
-                    </div>
-                    <div className="text-lg tracking-widest font-bold my-4">
-                      {cardData.cardNumber}
-                    </div>
-                    <div className="flex justify-between text-xs text-slate-300">
-                      <div>
-                        <span className="text-[9px] text-slate-400 block">CARDHOLDER</span>
-                        <span className="font-semibold uppercase">{cardData.cardHolder}</span>
-                      </div>
-                      <div>
-                        <span className="text-[9px] text-slate-400 block">EXPIRES</span>
-                        <span className="font-semibold">{cardData.expiry}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="col-span-2">
-                      <label className="text-slate-400 font-mono block mb-1">Card Number</label>
-                      <input
-                        type="text"
-                        value={cardData.cardNumber}
-                        onChange={(e) => setCardData({ ...cardData, cardNumber: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono focus:outline-none focus:border-sky-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-slate-400 font-mono block mb-1">Cardholder Name</label>
-                      <input
-                        type="text"
-                        value={cardData.cardHolder}
-                        onChange={(e) => setCardData({ ...cardData, cardHolder: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono focus:outline-none focus:border-sky-500 uppercase"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="text-slate-400 font-mono block mb-1">Expiry</label>
-                        <input
-                          type="text"
-                          value={cardData.expiry}
-                          onChange={(e) => setCardData({ ...cardData, expiry: e.target.value })}
-                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono focus:outline-none focus:border-sky-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-slate-400 font-mono block mb-1">CVV</label>
-                        <input
-                          type="password"
-                          value={cardData.cvv}
-                          maxLength={4}
-                          onChange={(e) => setCardData({ ...cardData, cvv: e.target.value })}
-                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono focus:outline-none focus:border-sky-500"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {paymentMethod === 'applepay' && (
-                <div className="p-8 text-center bg-slate-950/70 border border-slate-800 rounded-xl">
-                  <span className="text-4xl block mb-2">🍎</span>
-                  <p className="text-sm font-bold text-white">Apple Pay Ready</p>
-                  <p className="text-xs text-slate-400 mt-1">One-touch biometric confirmation with Face ID / Touch ID</p>
-                </div>
-              )}
-
-              {paymentMethod === 'paypal' && (
-                <div className="p-8 text-center bg-slate-950/70 border border-slate-800 rounded-xl">
-                  <span className="text-4xl block mb-2">🅿️</span>
-                  <p className="text-sm font-bold text-white">PayPal Express Checkout</p>
-                  <p className="text-xs text-slate-400 mt-1">You will be redirected securely to authenticate and confirm</p>
-                </div>
-              )}
-
-              {paymentMethod === 'klarna' && (
-                <div className="p-6 bg-pink-950/20 border border-pink-900/40 rounded-xl text-xs space-y-2">
-                  <div className="flex justify-between font-bold text-white">
-                    <span>Pay in 4 interest-free installments</span>
-                    <span className="text-pink-400 font-mono">{formatINR(finalTotal / 4)} / bi-weekly</span>
-                  </div>
-                  <p className="text-slate-400">No interest, no added fees when paid on time. Automatic deduction every 2 weeks.</p>
-                </div>
-              )}
-
-              {/* Complete Order CTA */}
+              <div className="flex justify-between text-sm border-t border-slate-800 pt-4">
+                <span className="text-slate-400">Demo order value</span>
+                <strong className="text-white">{formatINR(finalTotal)}</strong>
+              </div>
               <div className="pt-2 flex gap-3">
-                <button
-                  onClick={() => setActiveStep('address')}
-                  className="w-1/3 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleSubmitOrder}
-                  disabled={isSubmitting}
-                  className="flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-600 hover:from-emerald-400 hover:to-sky-500 font-bold text-white text-sm shadow-xl shadow-emerald-500/20 active:scale-98 transition-all flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>DISPATCHING BOOTS...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>CONFIRM & PLACE ORDER ({formatINR(finalTotal)})</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </>
-                  )}
+                <button onClick={() => setActiveStep('address')} className="w-1/3 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">Back</button>
+                <button onClick={handleSubmitOrder} disabled={isSubmitting} className="flex-1 py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 font-bold text-slate-950 text-sm shadow-xl transition-all">
+                  {isSubmitting ? 'CREATING DEMO ORDER…' : 'CREATE DEMO ORDER'}
                 </button>
               </div>
             </div>
           )}
-        </div>
-
         {/* Right Column: Sticky Summary & Promo Code (5 cols) */}
         <div className="lg:col-span-5 space-y-5">
           <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5 sticky top-24">
             <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 pb-3">
-              Payment Breakdown
+              Demo Order Estimate
             </h3>
 
             {/* Price lines */}
@@ -473,7 +332,7 @@ export const CheckoutView = ({
 
               <div className="flex justify-between text-slate-300">
                 <span>Matchday Courier Delivery</span>
-                <span className="text-emerald-400 font-bold">FREE ($0.00)</span>
+                <span className="text-emerald-400 font-bold">FREE</span>
               </div>
 
               <div className="flex justify-between text-slate-300">
