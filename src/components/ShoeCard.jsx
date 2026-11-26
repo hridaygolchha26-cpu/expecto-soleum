@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { calculateBootMatch } from '../utils/fitCalculator';
+import { formatINR } from '../utils/currency';
 
 export const ShoeCard = ({ boot, userMeasurements, onAddToCart, onBuyNow, isFavourite = false, onToggleFavourite, onRequestAuth }) => {
   const [selectedSize, setSelectedSize] = useState(userMeasurements.sizeEU || 42.5);
@@ -106,8 +107,8 @@ export const ShoeCard = ({ boot, userMeasurements, onAddToCart, onBuyNow, isFavo
           </h3>
 
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-2xl font-black text-white font-mono">${boot.price}</span>
-            <span className="text-xs text-slate-400">USD • Free Express Shipping</span>
+            <span className="text-2xl font-black text-white font-mono">{formatINR(boot.price)}</span>
+            <span className="text-xs text-slate-400">INR • Free Express Shipping</span>
           </div>
 
           {/* Fit Assessment Bar */}
@@ -239,7 +240,7 @@ export const ShoeCard = ({ boot, userMeasurements, onAddToCart, onBuyNow, isFavo
               onClick={() => onBuyNow({ ...boot, selectedSize })}
               className="py-2 px-3 rounded-lg bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold shadow-md shadow-sky-500/20"
             >
-              Buy Now (${boot.price})
+              Buy Now ({formatINR(boot.price)})
             </button>
           </div>
         </div>
