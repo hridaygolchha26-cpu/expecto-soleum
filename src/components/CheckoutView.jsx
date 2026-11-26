@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { formatINR } from '../utils/currency';
 
 export const CheckoutView = ({
   items,
@@ -149,7 +150,7 @@ export const CheckoutView = ({
                             {item.brand} • {item.surface}
                           </span>
                           <span className="text-sm font-bold text-white font-mono">
-                            ${item.price}
+                            {formatINR(item.price)}
                           </span>
                         </div>
                         <h4 className="text-sm font-bold text-white">{item.name}</h4>
@@ -176,7 +177,7 @@ export const CheckoutView = ({
                   <span className="text-base">🎁</span>
                   <span>Free Expecto Soleum Breathable Boot Bag & Match Laces</span>
                 </div>
-                <span className="font-mono text-emerald-400 font-bold">$0.00</span>
+                <span className="font-mono text-emerald-400 font-bold">{formatINR(0)}</span>
               </div>
 
               <button
@@ -411,7 +412,7 @@ export const CheckoutView = ({
                 <div className="p-6 bg-pink-950/20 border border-pink-900/40 rounded-xl text-xs space-y-2">
                   <div className="flex justify-between font-bold text-white">
                     <span>Pay in 4 interest-free installments</span>
-                    <span className="text-pink-400 font-mono">${(finalTotal / 4).toFixed(2)} / bi-weekly</span>
+                    <span className="text-pink-400 font-mono">{formatINR(finalTotal / 4)} / bi-weekly</span>
                   </div>
                   <p className="text-slate-400">No interest, no added fees when paid on time. Automatic deduction every 2 weeks.</p>
                 </div>
@@ -437,7 +438,7 @@ export const CheckoutView = ({
                     </>
                   ) : (
                     <>
-                      <span>CONFIRM & PLACE ORDER (${finalTotal.toFixed(2)})</span>
+                      <span>CONFIRM & PLACE ORDER ({formatINR(finalTotal)})</span>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
@@ -460,13 +461,13 @@ export const CheckoutView = ({
             <div className="space-y-3 text-xs font-mono">
               <div className="flex justify-between text-slate-300">
                 <span>Items Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatINR(subtotal)}</span>
               </div>
 
               {discountPercent > 0 && (
                 <div className="flex justify-between text-emerald-400">
                   <span>Promo Discount ({discountPercent}%)</span>
-                  <span>-${discountAmount.toFixed(2)}</span>
+                  <span>-{formatINR(discountAmount)}</span>
                 </div>
               )}
 
@@ -483,7 +484,7 @@ export const CheckoutView = ({
               <div className="pt-3 border-t border-slate-800 flex justify-between items-baseline text-white">
                 <span className="text-sm font-sans font-bold">Total Due</span>
                 <span className="text-2xl font-black text-sky-400 font-mono">
-                  ${finalTotal.toFixed(2)}
+                  {formatINR(finalTotal)}
                 </span>
               </div>
             </div>
