@@ -13,6 +13,7 @@ import { AccountPanel } from './components/AccountPanel';
 import { ResetPasswordView } from './components/ResetPasswordView';
 import { listFavourites, toggleFavourite } from './lib/favourites';
 import { listMeasurements } from './lib/measurements';
+import { createDemoOrder } from './lib/orders';
 import { calculateSizesFromLength } from './utils/fitCalculator';
 
 export function App() {
@@ -161,12 +162,11 @@ export function App() {
   };
 
   // Order Complete
-  const handleCompleteOrder = (orderData) => {
-    setLastOrder(orderData);
-    // If checkout was from full cart, clear it
-    if (checkoutItems.length === cart.length) {
-      setCart([]);
-    }
+  const handleCompleteOrder = async (orderData) => {
+    if (!user) throw new Error('Please sign in before creating a demo order so it can be saved to your account.');
+    const savedOrder = await createDemoOrder(user.id, orderData);
+    setLastOrder({ ...orderData, id: savedOrder.id, createdAt: savedOrder.created_at });
+    if (checkoutItems.length === cart.length) setCart([]);
     setCurrentStep('confirmation');
   };
 
