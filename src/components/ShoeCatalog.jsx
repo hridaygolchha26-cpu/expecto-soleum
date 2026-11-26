@@ -10,7 +10,11 @@ export const ShoeCatalog = ({
   userMeasurements,
   onAddToCart,
   onBuyNow,
-  onBackToMeasurement
+  onBackToMeasurement,
+  userId,
+  favouriteIds = [],
+  onToggleFavourite,
+  onRequestAuth
 }) => {
   const [selectedBrand, setSelectedBrand] = useState('All');
   const [selectedSort, setSelectedSort] = useState('match');
@@ -294,6 +298,9 @@ export const ShoeCatalog = ({
                 userMeasurements={userMeasurements}
                 onAddToCart={onAddToCart}
                 onBuyNow={onBuyNow}
+                isFavourite={favouriteIds.includes(boot.id)}
+                onToggleFavourite={userId ? onToggleFavourite : onRequestAuth}
+                onRequestAuth={onRequestAuth}
               />
             ))}
           </div>
