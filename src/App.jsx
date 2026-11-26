@@ -6,7 +6,7 @@ import { ShoeCatalog } from './components/ShoeCatalog';
 console.log("APP FILE LOADED");
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutView } from './components/CheckoutView';
-import { OrderConfirmation } from './components/OrderConfirmation';
+import { BookingStatusPage } from './components/BookingStatusPage';
 import { useAuth } from './auth/AuthProvider';
 import { AuthModal } from './components/AuthModal';
 import { AccountPanel } from './components/AccountPanel';
@@ -295,10 +295,11 @@ export function App() {
 
         {/* STEP 4: ORDER CONFIRMATION & RECEIPT */}
         {currentStep === 'confirmation' && lastOrder && (
-          <OrderConfirmation
-            orderDetails={lastOrder}
-            userMeasurements={measurements}
-            onReset={() => setCurrentStep('measure')}
+          <BookingStatusPage
+            order={lastOrder}
+            measurements={measurements}
+            onRestart={() => setCurrentStep('measure')}
+            onBackToCatalog={() => setCurrentStep('catalog')}
           />
         )}
       </main>
