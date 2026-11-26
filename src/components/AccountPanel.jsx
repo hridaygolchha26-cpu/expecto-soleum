@@ -7,7 +7,7 @@ import {listDemoOrders} from '../lib/orders';
 import {formatINR} from '../utils/currency';
 const blank={name:'My measurements',lengthCm:'27.2',widthCm:'10.4',preferredSize:'',sizeSystem:'EU',notes:''};
 export function AccountPanel({isOpen,user,onClose,onUseMeasurement}){
- const {signOut}=useAuth();const [displayName,setDisplayName]=useState(''),[measurements,setMeasurements]=useState([]),[favourites,setFavourites]=useState([]),[form,setForm]=useState(blank),[editingId,setEditingId]=useState(null),[busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState('');
+ const {signOut}=useAuth();const [displayName,setDisplayName]=useState(''),[measurements,setMeasurements]=useState([]),[favourites,setFavourites]=useState([]),[orders,setOrders]=useState([]),[form,setForm]=useState(blank),[editingId,setEditingId]=useState(null),[busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState('');
  const load=async()=>{if(!user)return;const [p,m,f,o]=await Promise.all([supabase.from('profiles').select('display_name').eq('id',user.id).single(),listMeasurements(user.id),supabase.from('favourite_shoes').select('shoe_id').eq('user_id',user.id),listDemoOrders(user.id)]);if(p.error&&p.error.code!=='PGRST116')throw p.error;if(f.error)throw f.error;setDisplayName(p.data?.display_name||user.user_metadata?.display_name||'');setMeasurements(m);setFavourites((f.data||[]).map(x=>x.shoe_id));setOrders(o);};
  useEffect(()=>{if(isOpen&&user)load().catch(e=>setError(e.message||'Could not load account.'));},[isOpen,user?.id]);
  if(!isOpen||!user)return null;
