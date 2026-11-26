@@ -1,14 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Navbar } from './components/Navbar';
-import { Foot3DViewer } from './components/Foot3DViewer';
+const Foot3DViewer = lazy(() => import('./components/Foot3DViewer').then((module) => ({ default: module.Foot3DViewer })));
 import { MeasurementForm } from './components/MeasurementForm';
 import { ShoeCatalog } from './components/ShoeCatalog';
-console.log("APP FILE LOADED");
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutView } from './components/CheckoutView';
-import { OrderConfirmation } from './components/OrderConfirmation';
+import { BookingStatusPage } from './components/BookingStatusPage';
+import { useAuth } from './auth/AuthProvider';
+import { AuthModal } from './components/AuthModal';
+import { AccountPanel } from './components/AccountPanel';
+import { ResetPasswordView } from './components/ResetPasswordView';
+import { listFavourites, toggleFavourite } from './lib/favourites';
+import { listMeasurements } from './lib/measurements';
+import { createDemoOrder } from './lib/orders';
+import { calculateSizesFromLength } from './utils/fitCalculator';
 
 export function App() {
+  const { user } = useAuth();
   // Navigation / Step state: 'measure' | 'catalog' | 'checkout' | 'confirmation'
   const [currentStep, setCurrentStep] = useState('measure');
 
@@ -38,6 +46,9 @@ export function App() {
   const [checkoutItems, setCheckoutItems] = useState([]);
   const [lastOrder, setLastOrder] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAccountPanelOpen, setIsAccountPanelOpen] = useState(false);
+  const [favouriteIds, setFavouriteIds] = useState([]);
 
   useEffect(() => {
     try {
@@ -54,6 +65,46 @@ export function App() {
       return () => clearTimeout(timer);
     }
   }, [toastMessage]);
+
+  useEffect(() => {
+    let active = true;
+    if (!user) { setFavouriteIds([]); return () => { active = false; }; }
+    Promise.all([listFavourites(user.id), listMeasurements(user.id)]).then(([favourites, saved]) => {
+      if (!active) return;
+      setFavouriteIds(favourites.map((item) => item.shoe_id));
+      const preferred = saved.find((item) => item.is_default);
+      if (preferred) {
+        const lengthCm = Number(preferred.foot_length_mm) / 10;
+        const widthCm = Number(preferred.foot_width_mm) / 10;
+        const sizes = calculateSizesFromLength(lengthCm);
+        setMeasurements((current) => ({ ...current, lengthCm, widthCm, sizeEU: sizes.eu, sizeUK: sizes.uk, sizeUS: sizes.usMen, sizeUnit: preferred.size_system || 'EU' }));
+      }
+    }).catch((error) => console.error('Could not load account preferences:', error));
+    return () => { active = false; };
+  }, [user && user.id]);
+
+  const handleToggleFavourite = async (shoeId) => {
+    if (!user) { setIsAuthModalOpen(true); return; }
+    const wasFavourite = favouriteIds.includes(shoeId);
+    setFavouriteIds((current) => wasFavourite ? current.filter((id) => id !== shoeId) : [...current, shoeId]);
+    try {
+      await toggleFavourite(user.id, shoeId, wasFavourite);
+      showToast(wasFavourite ? 'Removed from favourites.' : 'Added to favourites.');
+    } catch (error) {
+      setFavouriteIds((current) => wasFavourite ? [...current, shoeId] : current.filter((id) => id !== shoeId));
+      showToast(error.message || 'Could not update favourites.');
+    }
+  };
+
+  const handleUseMeasurement = (saved) => {
+    const lengthCm = Number(saved.foot_length_mm) / 10;
+    const widthCm = Number(saved.foot_width_mm) / 10;
+    const sizes = calculateSizesFromLength(lengthCm);
+    setMeasurements((current) => ({ ...current, lengthCm, widthCm, sizeEU: sizes.eu, sizeUK: sizes.uk, sizeUS: sizes.usMen, sizeUnit: saved.size_system || 'EU' }));
+    setIsAccountPanelOpen(false);
+    setCurrentStep('measure');
+    showToast('Loaded "' + saved.name + '" measurements.');
+  };
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -110,16 +161,17 @@ export function App() {
   };
 
   // Order Complete
-  const handleCompleteOrder = (orderData) => {
-    setLastOrder(orderData);
-    // If checkout was from full cart, clear it
-    if (checkoutItems.length === cart.length) {
-      setCart([]);
-    }
+  const handleCompleteOrder = async (orderData) => {
+    if (!user) throw new Error('Please sign in before creating a demo order so it can be saved to your account.');
+    const savedOrder = await createDemoOrder(user.id, orderData);
+    setLastOrder({ ...orderData, id: savedOrder.id, createdAt: savedOrder.created_at });
+    if (checkoutItems.length === cart.length) setCart([]);
     setCurrentStep('confirmation');
   };
 
   const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  if (window.location.pathname === '/reset-password') return <ResetPasswordView />;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-sky-500 selection:text-white">
@@ -140,6 +192,9 @@ export function App() {
         }}
         cartCount={totalCartCount}
         onOpenCart={() => setIsCartOpen(true)}
+        user={user}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenAccount={() => setIsAccountPanelOpen(true)}
       />
 
       {/* Toast Notification */}
@@ -175,16 +230,16 @@ export function App() {
             <div className="text-center max-w-3xl mx-auto pt-2 pb-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-950/80 border border-sky-800/60 text-sky-400 text-xs font-mono font-medium mb-3">
                 <span>⚡</span>
-                <span>ELIMINATE BLISTERS & TOE CROWDING IN FOOTBALL BOOTS</span>
+                <span>FIND BOOTS THAT MAY BETTER MATCH YOUR FOOT WIDTH</span>
               </div>
               <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
                 Expecto Soleum. <br />
                 <span className="bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                  Precision Boot Fit By 3D Biometrics.
+                  Football Boot Fit, Guided by Your Measurements.
                 </span>
               </h1>
               <p className="text-sm text-slate-400 mt-3 leading-relaxed">
-                Football boots are built on radically different lasts. Rotate the 3D foot model below, dial in your exact heel-to-toe length and metatarsal width, and our matching algorithm will filter boots designed specifically for your anatomical foot shape.
+                Football boots can fit differently across brands and models. Enter your foot length and forefoot width, then compare them with the width information configured in our demo catalogue. Results are estimates to help guide your research, not a guarantee of fit.
               </p>
             </div>
 
@@ -192,11 +247,15 @@ export function App() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: 3D Foot Viewer (7 cols) */}
               <div className="lg:col-span-7">
-                <Foot3DViewer
-                  lengthCm={measurements.lengthCm}
-                  widthCm={measurements.widthCm}
-                  archType={measurements.archType}
-                />
+                {!isAuthModalOpen && !isAccountPanelOpen && (
+                  <Suspense fallback={<div className="min-h-[320px] rounded-2xl border border-slate-800 bg-slate-900/60 flex items-center justify-center text-sm text-slate-400">Loading 3D foot model…</div>}>
+                    <Foot3DViewer
+                      lengthCm={measurements.lengthCm}
+                      widthCm={measurements.widthCm}
+                      archType={measurements.archType}
+                    />
+                  </Suspense>
+                )}
               </div>
 
               {/* Right Column: Measurement Form (5 cols) */}
@@ -218,6 +277,10 @@ export function App() {
             onAddToCart={handleAddToCart}
             onBuyNow={handleBuyNow}
             onBackToMeasurement={() => setCurrentStep('measure')}
+            userId={user ? user.id : null}
+            favouriteIds={favouriteIds}
+            onToggleFavourite={handleToggleFavourite}
+            onRequestAuth={() => setIsAuthModalOpen(true)}
           />
         )}
 
@@ -226,6 +289,7 @@ export function App() {
           <CheckoutView
             items={checkoutItems.length > 0 ? checkoutItems : cart}
             userMeasurements={measurements}
+            userId={user?.id || null}
             onBack={() => setCurrentStep('catalog')}
             onCompleteOrder={handleCompleteOrder}
           />
@@ -233,10 +297,11 @@ export function App() {
 
         {/* STEP 4: ORDER CONFIRMATION & RECEIPT */}
         {currentStep === 'confirmation' && lastOrder && (
-          <OrderConfirmation
-            orderDetails={lastOrder}
-            userMeasurements={measurements}
-            onReset={() => setCurrentStep('measure')}
+          <BookingStatusPage
+            order={lastOrder}
+            measurements={measurements}
+            onRestart={() => setCurrentStep('measure')}
+            onBackToCatalog={() => setCurrentStep('catalog')}
           />
         )}
       </main>
@@ -254,6 +319,8 @@ export function App() {
           </div>
         </div>
       </footer>
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <AccountPanel isOpen={isAccountPanelOpen} user={user} onClose={() => setIsAccountPanelOpen(false)} onUseMeasurement={handleUseMeasurement} />
     </div>
   );
 }

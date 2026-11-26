@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatINR } from '../utils/currency';
 
 export const OrderConfirmation = ({ orderDetails, userMeasurements, onReset }) => {
   return (
@@ -32,7 +33,7 @@ export const OrderConfirmation = ({ orderDetails, userMeasurements, onReset }) =
           </div>
           <div>
             <span className="text-slate-400 block text-[10px]">TOTAL PAID</span>
-            <span className="text-emerald-400 font-bold text-sm">${orderDetails.total.toFixed(2)}</span>
+            <span className="text-emerald-400 font-bold text-sm">{formatINR(orderDetails.total)}</span>
           </div>
           <div>
             <span className="text-slate-400 block text-[10px]">ESTIMATED ARRIVAL</span>
@@ -73,7 +74,7 @@ export const OrderConfirmation = ({ orderDetails, userMeasurements, onReset }) =
                   </div>
                 </div>
                 <div className="font-mono font-bold text-white text-sm">
-                  ${(item.price * (item.quantity || 1)).toFixed(2)}
+                  {formatINR(item.price * (item.quantity || 1))}
                 </div>
               </div>
             ))}

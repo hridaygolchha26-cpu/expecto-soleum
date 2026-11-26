@@ -1,100 +1,42 @@
 import React from 'react';
+import { formatINR } from '../utils/currency';
 
 export const BookingStatusPage = ({ order, measurements, onRestart, onBackToCatalog }) => {
+  const items = order?.items || [];
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4 animate-fadeIn space-y-6">
-      <div className="bg-[#1A1D24] border-2 border-[#2A2F3A] rounded-3xl p-6 lg:p-8 shadow-2xl text-center relative overflow-hidden">
-        <div className="w-16 h-16 rounded-2xl bg-[#1B4D3E] text-[#34D399] flex items-center justify-center text-3xl font-black mx-auto mb-3 shadow-lg border border-[#34D399]/40">
-          ✓
+    <div className="max-w-3xl mx-auto py-10 px-4 animate-fadeIn">
+      <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 lg:p-10 shadow-2xl space-y-6">
+        <div className="text-center space-y-3">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/15 text-amber-300 flex items-center justify-center text-3xl font-black mx-auto border border-amber-500/30">✓</div>
+          <span className="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider bg-amber-950/50 text-amber-300 border border-amber-500/30">Demo order created</span>
+          <h2 className="text-2xl lg:text-3xl font-black text-white">Your Expecto Soleum demo order</h2>
+          <p className="text-sm text-slate-400">Reference: <strong className="text-amber-300">{order?.orderId || 'Not available'}</strong></p>
         </div>
-        <span className="text-xs text-[#34D399] uppercase font-bold tracking-widest bg-[#1B4D3E]/30 px-3 py-1 rounded-full border border-[#34D399]/30">
-          Booking Confirmed & Dispatched
-        </span>
-        <div className="mt-2.5 inline-flex items-center gap-2 bg-[#1B4D3E]/40 border border-[#34D399]/50 px-3.5 py-1 rounded-full text-xs text-[#34D399] font-medium">
-          <span>🛡️</span>
-          <span><strong>Dummy Order Simulation:</strong> No money deduction was made. ₹0 charged.</span>
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-950/20 p-4 text-sm space-y-1">
+          <p className="font-bold text-amber-200">Demo only — ₹0 charged</p>
+          <p className="text-slate-300">This order is simulated. No payment was collected, no courier was booked, and no physical product is being dispatched.</p>
         </div>
-        <h2 className="text-2xl lg:text-3xl font-black text-[#F4F1EA] mt-2">
-          Football Studs Order Tracking
-        </h2>
-        <p className="text-xs text-[#A0A6B1] font-mono-num mt-1">
-          Tracking ID: <strong className="text-[#E5B80B]">{order.orderId}</strong> • Expected: <strong className="text-[#34D399]">{order.expectedDelivery}</strong>
-        </p>
-
-        {/* Live Timeline */}
-        <div className="mt-8 pt-6 border-t border-[#2A2F3A] text-left">
-          <span className="text-[11px] font-bold text-[#E5B80B] uppercase tracking-wider block mb-4">
-            Dispatch Status Timeline
-          </span>
-          <div className="space-y-4">
-            {[
-              { step: '1', title: 'Order Confirmed & Biometrics Verified', time: 'Today, 2:15 PM', status: 'done', desc: 'Foot Length and Width calibrated with soleplate last.' },
-              { step: '2', title: 'Studs Quality Checked & Torque Tested', time: 'Today, 2:45 PM', status: 'done', desc: 'All 14 TPU studs inspected for hardness and zero sole separation.' },
-              { step: '3', title: 'Dispatched via Sports Courier (Blue Dart)', time: 'Today, 3:30 PM', status: 'current', desc: 'Air Waybill #BD9821482IN — In transit to sorting hub.' },
-              { step: '4', title: 'Out for Pitch Delivery', time: 'Estimated in 48 hrs', status: 'pending', desc: 'Courier agent will contact via SMS prior to doorstep delivery.' }
-            ].map((s) => (
-              <div key={s.step} className="flex items-start gap-3.5">
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0 ${
-                  s.status === 'done'
-                    ? 'bg-[#1B4D3E] text-[#34D399] border border-[#34D399]'
-                    : s.status === 'current'
-                    ? 'bg-[#E5B80B] text-[#0F1115] font-black animate-pulse'
-                    : 'bg-[#14171E] text-[#A0A6B1] border border-[#2A2F3A]'
-                }`}>
-                  {s.status === 'done' ? '✓' : s.step}
-                </div>
-                <div className="flex-1 pb-3 border-b border-[#2A2F3A]/60">
-                  <div className="flex justify-between items-baseline">
-                    <h4 className={`text-xs font-bold ${s.status === 'current' ? 'text-[#E5B80B]' : 'text-[#F4F1EA]'}`}>
-                      {s.title}
-                    </h4>
-                    <span className="text-[10px] font-mono-num text-[#A0A6B1]">{s.time}</span>
-                  </div>
-                  <p className="text-[11px] text-[#A0A6B1] mt-0.5">{s.desc}</p>
-                </div>
+        <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-5 space-y-4">
+          <h3 className="font-bold text-white">Order summary</h3>
+          {items.map((item, index) => (
+            <div key={item.id || index} className="flex items-center gap-3 border-b border-slate-800 pb-3">
+              {item.image && <img src={item.image} alt={item.name || 'Football boot'} className="w-16 h-16 rounded-lg object-cover bg-slate-900" />}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-white">{item.name || 'Football boot'}</p>
+                <p className="text-xs text-slate-400">Size {item.selectedSize ?? '—'} · Qty {item.quantity || 1}</p>
               </div>
-            ))}
-          </div>
+              <span className="text-sm text-white">{formatINR((Number(item.price) || 0) * (item.quantity || 1))}</span>
+            </div>
+          ))}
+          <div className="flex justify-between text-sm"><span className="text-slate-400">Estimated order value (not charged)</span><strong className="text-white">{formatINR(order?.total || 0)}</strong></div>
+          <div className="flex justify-between text-sm"><span className="text-slate-400">Amount paid</span><strong className="text-emerald-300">{formatINR(0)}</strong></div>
+          {order?.address?.city && <p className="text-xs text-slate-500 border-t border-slate-800 pt-3">Demo destination entered: {order.address.city}, {order.address.country}</p>}
+          {measurements && <p className="text-xs text-slate-500">Fit profile used: {measurements.lengthCm} cm length × {measurements.widthCm} cm width</p>}
         </div>
-
-        {/* Invoice Summary */}
-        <div className="mt-6 p-4 rounded-2xl bg-[#14171E] border border-[#2A2F3A] text-left text-xs font-mono-num space-y-3">
-          <div className="flex justify-between border-b border-[#2A2F3A] pb-2">
-            <span className="text-[#A0A6B1]">Item Booked:</span>
-            <span className="text-[#F4F1EA] font-bold">{order.items[0]?.name || 'Nivia Ashtang Studs'}</span>
-          </div>
-          <div className="flex justify-between border-b border-[#2A2F3A] pb-2">
-            <span className="text-[#A0A6B1]">Selected Size:</span>
-            <span className="text-[#E5B80B] font-bold">UK / IND {order.items[0]?.selectedSize || 8}</span>
-          </div>
-          <div className="flex justify-between border-b border-[#2A2F3A] pb-2">
-            <span className="text-[#A0A6B1]">Destination Address:</span>
-            <span className="text-[#F4F1EA] font-bold">{order.address.fullName}, {order.address.city} (PIN: {order.address.postalCode})</span>
-          </div>
-          <div className="flex justify-between border-b border-[#2A2F3A] pb-2">
-            <span className="text-[#A0A6B1]">Payment Method:</span>
-            <span className="text-[#34D399] font-bold">{order.paymentMethod}</span>
-          </div>
-          <div className="flex justify-between pt-1">
-            <span className="text-[#A0A6B1]">Amount Paid:</span>
-            <span className="text-base font-black text-[#E5B80B]">₹{order.total.toLocaleString('en-IN')}</span>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-          <button
-            onClick={() => window.print()}
-            className="px-6 py-3 rounded-2xl bg-[#14171E] hover:bg-[#0F1115] text-[#F4F1EA] text-xs font-bold border border-[#2A2F3A] hover:border-[#E5B80B] transition"
-          >
-            🖨️ Print Booking Invoice
-          </button>
-          <button
-            onClick={onRestart}
-            className="px-6 py-3 rounded-2xl bg-[#E5B80B] hover:bg-yellow-400 text-[#0F1115] text-xs font-black uppercase tracking-wider transition shadow-lg"
-          >
-            Scan Another Foot / New Booking
-          </button>
+        <p className="text-xs text-slate-500 text-center">{order?.id ? 'This demo order is saved to your signed-in account. Find it under My Account → Demo order history.' : 'This demo reference is temporary and is not saved to an account.'}</p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button onClick={onBackToCatalog} className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold">Back to boot catalogue</button>
+          <button onClick={onRestart} className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black">Start another fit</button>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatINR } from '../utils/currency';
 
 export const CartDrawer = ({ isOpen, onClose, cart, onUpdateQuantity, onRemoveItem, onProceedToCheckout }) => {
   if (!isOpen) return null;
@@ -45,7 +46,7 @@ export const CartDrawer = ({ isOpen, onClose, cart, onUpdateQuantity, onRemoveIt
                 ⚽
               </div>
               <p className="text-sm font-semibold text-slate-400">Your boot bag is empty</p>
-              <p className="text-xs text-slate-600 mt-1">Select from our precision-matched boots</p>
+              <p className="text-xs text-slate-600 mt-1">Explore the demo boot catalogue</p>
             </div>
           ) : (
             cart.map((item) => (
@@ -81,7 +82,7 @@ export const CartDrawer = ({ isOpen, onClose, cart, onUpdateQuantity, onRemoveIt
                       Size: EU {item.selectedSize}
                     </span>
                     <span className="text-xs font-bold text-white font-mono">
-                      ${item.price}
+                      {formatINR(item.price)}
                     </span>
                   </div>
 
@@ -117,19 +118,19 @@ export const CartDrawer = ({ isOpen, onClose, cart, onUpdateQuantity, onRemoveIt
             <div className="space-y-2 mb-4 text-xs font-mono">
               <div className="flex justify-between text-slate-400">
                 <span>Subtotal</span>
-                <span className="text-white">${subtotal.toFixed(2)}</span>
+                <span className="text-white">{formatINR(subtotal)}</span>
               </div>
               <div className="flex justify-between text-slate-400">
-                <span>Matchday Courier</span>
-                <span className="text-emerald-400 font-bold">FREE</span>
+                <span>Delivery</span>
+                <span className="text-amber-300 font-bold">Not available in demo</span>
               </div>
               <div className="flex justify-between text-slate-400">
-                <span>Expecto Fit Warranty</span>
-                <span className="text-emerald-400">INCLUDED</span>
+                <span>Fit recommendation</span>
+                <span className="text-sky-400">Estimate only</span>
               </div>
               <div className="flex justify-between text-base font-bold pt-2 border-t border-slate-800 text-white">
-                <span>Total</span>
-                <span className="text-sky-400 font-mono">${subtotal.toFixed(2)}</span>
+                <span>Estimated demo value</span>
+                <span className="text-sky-400 font-mono">{formatINR(subtotal)}</span>
               </div>
             </div>
 

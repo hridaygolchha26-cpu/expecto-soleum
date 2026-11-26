@@ -324,8 +324,28 @@ export const Foot3DViewer = ({ lengthCm = 27.0, widthCm = 10.0 }) => {
     return () => {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(frameId);
-      if (mount && renderer.domElement) mount.removeChild(renderer.domElement);
+      controls.dispose();
+
+      // Release every GPU resource created for this viewer before removing it.
+      scene.traverse((object) => {
+        if (object.geometry) object.geometry.dispose();
+        if (object.material) {
+          const materials = Array.isArray(object.material) ? object.material : [object.material];
+          materials.forEach((material) => {
+            Object.values(material).forEach((value) => {
+              if (value && value.isTexture) value.dispose();
+            });
+            material.dispose();
+          });
+        }
+      });
+
+      renderer.renderLists.dispose();
+      if (mount && renderer.domElement && renderer.domElement.parentNode === mount) {
+        mount.removeChild(renderer.domElement);
+      }
       renderer.dispose();
+      renderer.forceContextLoss();
     };
   }, []);
 

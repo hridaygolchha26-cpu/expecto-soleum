@@ -1,45 +1,61 @@
-# ⚡ Expecto Soleum — Enchanted Football Studs & 3D Biometric Footwear Engine
+# Expecto Soleum
 
-**Expecto Soleum** is a Harry Potter inspired Quidditch/Football fitting engine designed specifically for **Football Studs & Cleats** (Soft Ground SG, Firm Ground FG, and AG multi-studs).
+Expecto Soleum is a prototype football-boot fit discovery app. It helps users compare football boots using manually entered foot length and forefoot width, with a visual 3D foot model and a small demonstration catalogue.
 
----
+**Demo:** https://expecto-soleum.vercel.app
 
-## 🧙‍♂️ Harry Potter Quidditch Aesthetic & Palette
-- **Gryffindor Crimson & Deep Velvet Burgundy** (`#780000`, `#991b1b`, `#450a0a`)
-- **Golden Snitch Yellow & House Amber** (`#f59e0b`, `#fbbf24`, `#d97706`, `#fef3c7`)
-- **Aged Mahogany & Enchanted Leather** (`#1c0c08`, `#2d130a`)
-- **Wizarding Typography**: *Cinzel* & *Cinzel Decorative* headings with golden rune borders and candlelight glows.
+## What the prototype includes
 
----
+- Foot-length and forefoot-width input
+- A 3D visual representation of the entered measurements
+- A searchable football-boot catalogue with configured fit information
+- Estimated fit comparisons based on the catalogue data
+- Cart and simulated checkout
+- Supabase email authentication
+- Saved measurement profiles and favourite boots
+- Demo order history for signed-in users
 
-## 🧦 3D Coloured Foot Wearing Football Socks
-- Built as a **single, organic, continuous 3D mesh** (32 anatomical cross-sectional slices with smooth vertex normal interpolation).
-- **No primitive or disjointed shapes**: Realistically models the calf, ankle, heel curvature, medial longitudinal arch lift, and forefoot toe box naturally enclosed in a football compression sock.
-- **Procedural Team Football Sock Texture**:
-  - Gryffindor Crimson woven fabric with golden calf compression hoops.
-  - Ankle flex bands and midfoot arch support band.
-  - Realistic **Trusox-style silicone anti-slip grip dots** on the plantar sole.
-  - Golden lightning bolt crest on the shin.
-- **Enchanted Lumos Calipers**: Glowing golden dimension calipers for Length and Width that scale with your inputs.
-- **Hogwarts Runic Pedestal**: Rotating magical ground ring with Celtic/wizard glyphs.
+## Important limitations
 
----
+This is a demonstration project, not a live retailer. Catalogue availability, prices and fit information are illustrative and must be verified with the manufacturer or retailer. Fit scores are estimates, not a guarantee of comfort or suitability.
 
-## ⚡ Football Studs Specialist Catalog
-Unlike generic sports shoe finders, this engine is dedicated specifically to **Football Studs**:
-- **Stud Configurations**: Removable aluminum screw-in metal studs (13mm/15mm), molded chevron blades, rotational circular studs, and multi-stud hybrid plates.
-- **Stud Penetration & Anti-Clog**: Highlights muddy sod shedding technology, plate stiffness, and rotational torque relief (Cyclone 360).
-- **Elite Models**:
-  - *Nike Mercurial Superfly 10 SG-Pro Anti-Clog* (6 interchangeable metal screw-in + 5 chevron blades)
-  - *Nike Phantom GX 2 Elite FG Cyclone 360* (Rotational ring stud layout)
-  - *Adidas Predator 24 Elite FT SG* (Aluminum metal screw-in + Strikeskin power fins)
-  - *Adidas Copa Pure 2 Elite SG* (Conical stud pressure-dispersal plate)
-  - *Puma Future 7 Ultimate FG/AG* (13-stud diamond matrix for grass & 4G turf)
-  - *Mizuno Morelia Neo IV Beta Japan Mix SG* (Japanese artisan steel screw-in studs)
-  - *New Balance Furon v7+ Pro Wide (2E)* (Engineered wide foundation with acceleration chevrons)
+Checkout does not collect payment information, book a courier, or dispatch products. Do not enter real shipping or payment details. Demo orders only create a simulated reference in the signed-in user's account.
 
----
+## Tech stack
 
-## 🚀 Instant Launch (In Chrome)
-Double-click or open directly:
-👉 **[C:/Users/HP/.gemini/antigravity/scratch/expecto-soleum/index.html](file:///C:/Users/HP/.gemini/antigravity/scratch/expecto-soleum/index.html)**
+- React 18 and Vite
+- Tailwind CSS
+- Three.js
+- Supabase Auth and Postgres with Row Level Security
+- Vercel hosting
+
+## Local development
+
+Requirements: Node.js and npm.
+
+```bash
+npm install
+```
+
+Create a `.env.local` file in the project root with the Supabase project URL and publishable key:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+```
+
+Then run:
+
+```bash
+npm run dev
+```
+
+Create a production build with:
+
+```bash
+npm run build
+```
+
+## Project status
+
+The current hosted version is a preview/demo deployment. A production release requires final end-to-end testing, production environment configuration, security settings review and an explicit release decision.
