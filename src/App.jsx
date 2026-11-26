@@ -248,11 +248,13 @@ export function App() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: 3D Foot Viewer (7 cols) */}
               <div className="lg:col-span-7">
-                <Foot3DViewer
-                  lengthCm={measurements.lengthCm}
-                  widthCm={measurements.widthCm}
-                  archType={measurements.archType}
-                />
+                {!isAuthModalOpen && !isAccountPanelOpen && (
+                  <Foot3DViewer
+                    lengthCm={measurements.lengthCm}
+                    widthCm={measurements.widthCm}
+                    archType={measurements.archType}
+                  />
+                )}
               </div>
 
               {/* Right Column: Measurement Form (5 cols) */}
